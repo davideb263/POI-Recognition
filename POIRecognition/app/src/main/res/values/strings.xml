@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">POIRecognition</string>
+    <string name="recognitionLabel">Recognition</string>
+    <string name="trainLabel">Training</string>
+
+    <string name="BttStart">Start</string>
+    <string name="BttTrain">Train</string>
+    <string name="BttTraining">Start Training</string>
+    <string name="BttBack">Go Back</string>
+
+    <string name="PoiNameHint">Insert the POI Name</string>
+    <string name="WiFiScanNumberHint">Insert the number of scans to do</string>
+    <string name="TimeIntervalHint">Insert the interval of time between scans</string>
+
+    <string name="InfoText">WiFi POI Recognition with Stay Detection\n\nVirginia Baroncelli\nDavide Botter\nValentina Sanguineti\n\n
+                            IMEI: 35221506509020/9</string>
+    <string name="PoiStayLength">Here will be written the recognized POI and the relative stay lengths</string>
+</resources>

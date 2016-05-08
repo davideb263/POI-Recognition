@@ -26,9 +26,8 @@
         android:layout_height="wrap_content"
         android:background="@android:drawable/ic_menu_revert"
         android:backgroundTint="#4b4c50"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
-
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>

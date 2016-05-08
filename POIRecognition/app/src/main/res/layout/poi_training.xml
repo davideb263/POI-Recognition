@@ -43,8 +43,22 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/BttTraining"
         android:layout_below="@+id/WiFiScanNumber"
+        android:layout_toStartOf="@+id/textScan" />
+    <Button
+        android:id="@+id/getData"
+        android:text="@string/BttGetData"
+        android:clickable="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/Training"
+        android:layout_alignEnd="@+id/TimeInterval" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textScan"
+        android:text="@string/ScanPlaceHolder"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
-
-
 
 </RelativeLayout>

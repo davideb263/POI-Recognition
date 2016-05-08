@@ -6,12 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button bttStart = null;
-    private Button bttTrain = null;
+    Button bttStart = null;
+    Button bttTrain = null;
 
     final int START_REQUEST_CODE = 1;
     final int TRAIN_REQUEST_CODE = 2;

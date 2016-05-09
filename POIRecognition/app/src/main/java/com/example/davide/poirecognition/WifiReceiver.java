@@ -14,8 +14,6 @@ public class WifiReceiver extends BroadcastReceiver {
     private List<ScanResult> wifiList = null;
     private String _s = null;
 
-    private WifiManager wfm;
-
     // This method call when number of wifi connections changed
     public void onReceive(Context c, Intent intent) {
 

@@ -4,15 +4,19 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.R.bool;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.input.InputManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,7 +39,8 @@ public static AccessPoint accessPoint;
 public static ArrayList<ArrayList> history;
 public static ArrayList<AccessPoint> scanList;
 public static ArrayList <String> scanSList;
-public int count;
+public int count=0;
+private final String TAG="Training";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
@@ -72,7 +77,9 @@ public int count;
 				int scansNumber=Integer.parseInt(numberScans.getText().toString());
 				int interval=Integer.parseInt(intervalScans.getText().toString());
 				count =scansNumber;
-				final Handler handler=new Handler();				
+				final Handler handler=new Handler();
+				InputMethodManager inputManager= (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+				inputManager.hideSoftInputFromWindow((null==getCurrentFocus())?null:getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				timer=new Timer();		
 		timerTask=new TimerTask(){
 			public void run() {
@@ -81,6 +88,7 @@ public int count;
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
+						Log.i(TAG, "Scansione");
 						count--;
 				startScan();
 				if(count==0)
@@ -109,6 +117,25 @@ public int count;
 				finish();
 			}
 		});
+	}
+	public static int GetI(int index, String mac)
+	{
+		boolean isPresent=false;
+		ArrayList<AccessPoint> listAccess= history.get(index);
+		int pos=0;
+		for(int a=0; a<listAccess.size(); a++)
+		{
+			if(listAccess.get(a).mac==mac)
+			{
+				pos=a;
+				isPresent=true;
+			}
+			
+		}
+		if(isPresent)
+		return pos;
+		else
+		return -1;
 	}
 	public void startScan(){		
 						// TODO Auto-generated method stub

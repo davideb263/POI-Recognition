@@ -12,12 +12,14 @@ public class WiFiScanner extends BroadcastReceiver
 	final String TAG ="WifiReceiver";
 	private List<ScanResult> wifiList = null;
 	private String _s = "";
-	
+	private double swaprss=0;
 	private WifiManager wfm;
 
 	// This method call when number of wifi connections changed
 	public void onReceive(Context c, Intent intent) {
+		
 		wifiList = POI_training.wf.getScanResults(); 
+		POI_training.scanList.clear();
 		_s="";
 		_s = _s + "<br>       <b>Number Of Wifi connections :" + wifiList.size() + "</b>" + "<br><br>";
 
@@ -36,15 +38,29 @@ public class WiFiScanner extends BroadcastReceiver
 		
 		}
 		POI_training.scanSList.add(_s);
+		for(int i=0; i<POI_training.scanList.size(); i++)
+		{
+			
+			for(int j=i; j<POI_training.scanList.size(); j++)
+			{				
+				if(POI_training.scanList.get(i).rss<POI_training.scanList.get(j).rss)
+				{
+					swaprss=POI_training.scanList.get(i).rss;
+					POI_training.scanList.get(i).rss=POI_training.scanList.get(j).rss;
+					POI_training.scanList.get(j).rss=swaprss;
+				}
+			}
+			
+		}
 		POI_training.history.add(POI_training.scanList);
 		String a="";
 		for(int i=POI_training.scanSList.size() -1; i>=0; i--)
 		{
-		a=a+POI_training.scanSList.get(i);  
+			a=a+POI_training.scanSList.get(i);  
 		}
 		POI_training.mainText.setText(Html.fromHtml(a));
+		
 	}
-	
 /*private List <ScanResult> myScanResults=null;
 	@Override
 	public void onReceive(Context context, Intent arg1) {

@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="${relativePackage}.${activityClass}" 
+    tools:context="com.example.davide.poirecognition.MainActivity" 
     >
         <TextView
         android:id="@+id/info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text" 
+        android:text="@string/InfoText" 
         android:layout_marginLeft="45dp"/>
            <Button 
 	    android:id="@+id/Start"
@@ -23,7 +23,7 @@
 	    android:id="@+id/Train"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:text="@string/train"
+	    android:text="@string/BttTrain"
 	    android:layout_centerVertical="true"
 	    android:layout_alignStart="@+id/info"
 	    />

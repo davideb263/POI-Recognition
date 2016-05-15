@@ -2,20 +2,19 @@
 <resources>
 
     <string name="app_name">POIrecognition</string>
-    <string name="text">WiFi POI Recognition with Stay Detection\nVirginia Baroncelli\nDavide Botter
+    <string name="InfoText">WiFi POI Recognition with Stay Detection\nVirginia Baroncelli\nDavide Botter
         \nValentina Sanguineti\n IMEI: 35221506509020/9</string>
 	<string name="start">Start</string>
-	<string name="train">Train</string>
+	<string name="BttTrain">Train</string>
 	<string name="poitv">POI name:</string>
-	<string name="poiNameHint">POI</string>
+	<string name="PoiNameHint">POI</string>
 	<string name="numscanstv">Number of scans:</string>
-	<string name="scansHint">Number scans</string>
+	<string name="WiFiScanNumberHint">Number scans</string>
 	<string name="intervalscanstv">Interval temporal scans:</string>
-	<string name="intervalscan">Interval temporal scans</string>
-	<string name="training">Training</string>
-	<string name="poistaylength"></string>
-	<string name="backmain">Back</string>
-	<string name="recognitionString">Recognition POI</string>
-	<string name="trainingString">Training POI</string>
-	<string name="data">Data collected back to main</string>
+	<string name="TimeIntervalHint">Interval temporal scans</string>
+	<string name="BttTraining">Training</string>
+	<string name="PoiStayLength"></string>
+	<string name="recognitionLabel">Recognition POI</string>
+	<string name="trainLabel">Training POI</string>
+	<string name="BttGetData">Data collected back to main</string>
 </resources>

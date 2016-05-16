@@ -6,41 +6,70 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
 import android.text.Html;
 
 public class WifiReceiver extends BroadcastReceiver {
 
-    private List<ScanResult> wifiList = null;
-    private String _s = null;
+    private AccessPoint swapAp;
+    private History history;
+    List<ScanResult> wifiList = null;
+    String _s = "";
+
+
+    public WifiReceiver(History h){
+        this.history = h;
+    }
 
     // This method call when number of wifi connections changed
     public void onReceive(Context c, Intent intent) {
-
+        POI_Training.scanText.setText("new scan event ");
+        _s="";
+        swapAp=new AccessPoint();
         wifiList = POI_Training.mWifiManager.getScanResults();
-
-        _s = _s + "<br>       <b>Number Of Wifi connections :" + wifiList.size() + "</b>" + "<br><br>";
-
-
+        history.Add(new Scan());
+        //POI_training.scanList.clear();
         for(int i = 0; i < wifiList.size(); i++){
 
-            _s = _s + "<b><font color=\"red\">WiFi " + (i+1) + "</font></b>" + "<br>" +
-                    "<b>SSID:</b> " + wifiList.get(i).SSID + "<br>" +
-                    "<b>MAC:</b> " + wifiList.get(i).BSSID + "<br>" +
-                    "<b>RSS[dBm]:</b> " + wifiList.get(i).level + "<br>" +
-                    "<br>";
+            history.GetIndex(history.Size()-1).Add(new AccessPoint(wifiList.get(i).BSSID.toString(),wifiList.get(i).SSID.toString(),wifiList.get(i).level ));
 
+        }
+        for(int i=0; i<history.GetIndex(history.Size() -1).Size(); i++)
+        {
 
-            POI_Training.accessPoint.mac = wifiList.get(i).BSSID;
-            POI_Training.accessPoint.ssid = wifiList.get(i).SSID;
-            POI_Training.accessPoint.rss = wifiList.get(i).level;
+            for(int j=i; j<history.GetIndex(history.Size() -1).Size(); j++)
+            {
+                if(history.GetIndex(history.Size() -1).GetIndex(i).getRss()<history.GetIndex(history.Size()-1).GetIndex(j).getRss())
+                {
+                    swapAp=history.GetIndex(history.Size() -1).GetIndex(i);
+                    history.GetIndex(history.Size() -1).SetIndex(i, history.GetIndex(history.Size()-1).GetIndex(j) );
+                    history.GetIndex(history.Size()-1).SetIndex(j, swapAp);
+                }
+            }
 
-            POI_Training.ScanList.add(POI_Training.accessPoint);
         }
 
-        POI_Training.ScanHistory.add(POI_Training.ScanList);
+        for(int i=history.Size() -1; i>=0; i--)
+        {
 
-        POI_Training.scanText.setText(Html.fromHtml(_s));
+            _s = _s +"<br>       <b>Number Of Wifi connections :" + history.GetIndex(i).Size() + "</b>" + "<br><br>";
+
+
+            for(int a = 0; a < history.GetIndex(i).Size(); a++){
+
+                _s = _s+"<b><font color=\"red\">WiFi " + (a+1) + "</font></b>" + "<br>"+history.GetIndex(i).GetIndex(a).toString();
+
+            }
+
+        }
+        POI_Training.scanText.append(Html.fromHtml(_s));
+
+    }
+
+    public History getHistory() {
+        return history;
+    }
+    public void setHistory(History history) {
+        this.history = history;
     }
 
 }

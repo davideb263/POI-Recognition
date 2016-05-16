@@ -8,6 +8,7 @@
     <string name="BttTraining">Start Training</string>
     <string name="BttBack">Go Back</string>
     <string name="BttGetData">Get Data</string>
+    <string name="BttReturnMain">Return to Main</string>
 
     <string name="PoiNameHint">Insert the POI Name</string>
     <string name="WiFiScanNumberHint">Insert the number of scans to do</string>

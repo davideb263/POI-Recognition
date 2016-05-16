@@ -53,7 +53,7 @@
         android:layout_alignTop="@+id/Training"
         android:layout_alignEnd="@+id/TimeInterval" />
 
-<ScrollView
+    <ScrollView
     android:id="@+id/scrollScan"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

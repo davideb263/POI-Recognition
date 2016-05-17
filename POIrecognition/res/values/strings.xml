@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">POI Recognition</string>
+
+<string name="info">WiFi POI Recognition with stay detection\n Candidati: Baroncelli Virginia\n 	Botter Davide\n	 Sanguineti Valentina\n
+    IMEI= 35221506509020/9</string>
+    <string name="start">START</string>
+    <string name="train">TRAIN</string>
+    <string name="training">START TRAINING!</string>
+    <string name="PoiName">Insert POI Name</string>
+      <string name="NofScans">Insert the number of Scans</string>
+        <string name="ScanInterval">Insert Interval between two scans</string>
+        <string name="poiSL">Insert POI Stay Length</string>
+        <string name="Return">Back To Main</string>
+        <string name="recognitionString">Recognition String</string>
+        <string name="trainingString">Training String</string>
+    
+</resources>

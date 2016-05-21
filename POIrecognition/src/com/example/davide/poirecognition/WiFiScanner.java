@@ -1,6 +1,8 @@
 package com.example.davide.poirecognition;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,13 +17,18 @@ public class WiFiScanner extends BroadcastReceiver
 	private AccessPoint swapAp;
 	private WifiManager wfm;
 	private static History history;
-	public WiFiScanner(History history)
+	private static WeightList wlWeight;
+	private int count;
+	public WiFiScanner(History history, WeightList wlWeight)
 	{
 		this.history=history;
+		this.wlWeight=wlWeight;
+		count=0;
 	}
 	// This method call when number of wifi connections changed
 	public void onReceive(Context c, Intent intent) {
 		POI_Training.mainText.setText("new scan event ");
+		count++;
 		_s="";
 		swapAp=new AccessPoint();
 		wifiList = POI_Training.wf.getScanResults(); 
@@ -29,40 +36,50 @@ public class WiFiScanner extends BroadcastReceiver
 		//POI_training.scanList.clear();
 		for(int i = 0; i < wifiList.size(); i++){
 
-		history.GetIndex(history.Size()-1).Add(new AccessPoint(wifiList.get(i).BSSID.toString(),wifiList.get(i).SSID.toString(),wifiList.get(i).level ));
+		history.getHistory().get(history.Size()-1).Add(new AccessPoint(wifiList.get(i).BSSID.toString(),wifiList.get(i).SSID.toString(),wifiList.get(i).level ));
 	
 		}
-		for(int i=0; i<history.GetIndex(history.Size() -1).Size(); i++)
+		for(int i=0; i<history.getHistory().get(history.Size() -1).Size(); i++)
 		{
 			
-			for(int j=i; j<history.GetIndex(history.Size() -1).Size(); j++)
+			for(int j=i; j<history.getHistory().get(history.Size() -1).Size(); j++)
 			{				
-				if(history.GetIndex(history.Size() -1).GetIndex(i).getRss()<history.GetIndex(history.Size()-1).GetIndex(j).getRss())
+				if(history.getHistory().get(history.Size() -1).GetIndex(i).getRss()<history.getHistory().get(history.Size()-1).GetIndex(j).getRss())
 				{
-					swapAp=history.GetIndex(history.Size() -1).GetIndex(i);
-					history.GetIndex(history.Size() -1).SetIndex(i, history.GetIndex(history.Size()-1).GetIndex(j) ); 
-					history.GetIndex(history.Size()-1).SetIndex(j, swapAp);
+					swapAp=history.getHistory().get(history.Size() -1).GetIndex(i);
+					history.getHistory().get(history.Size() -1).SetIndex(i, history.getHistory().get(history.Size()-1).GetIndex(j) ); 
+					history.getHistory().get(history.Size()-1).SetIndex(j, swapAp);
 				}
 			}
 			
 		}
-		
-		for(int i=history.Size() -1; i>=0; i--)
+		if(count==2)
 		{
-			
-			_s = _s +"<br>       <b>Number Of Wifi connections :" + history.GetIndex(i).Size() + "</b>" + "<br><br>";
-			
-
-			for(int a = 0; a < history.GetIndex(i).Size(); a++){
-				
-				_s = _s+"<b><font color=\"red\">WiFi " + (a+1) + "</font></b>" + "<br>"+history.GetIndex(i).GetIndex(a).ToString();
-				
-			}
+			wlWeight=history.firstMerge(0, 1);
 			
 		}
-		POI_Training.mainText.append(Html.fromHtml(_s));
+		else if(count>2)
+		{
+			wlWeight=history.Merge(count-1, wlWeight);
 		
+		}
+		if(count>=2)
+		{_s = _s +"<br>       <b>Number Of Wifi connections :" + wlWeight.Size() + "</b>" + "<br><br>";
+			for(int a=0; a<wlWeight.Size(); a++)
+			{				
+			
+					
+					_s = _s+"<b><font color=\"red\">WiFi " + (a+1) + "</font></b>" + "<br>"+wlWeight.getWeightsList().get(a).toString();
+
+				_s=_s+"<br>";
+			}
+			
+			POI_Training.mainText.append(Html.fromHtml(_s));
+			
+		}
+			
 	}
+
 	public History getHistory() {
 		return history;
 	}
@@ -85,6 +102,21 @@ public class WiFiScanner extends BroadcastReceiver
 			Log.i(TAG, "Ss [dBm]"+sc.level);
 			MainActivity.mainText.append("Rete numero "+(i+1) +"SSID "+sc.SSID+"\n"+"MAC "+sc.BSSID +"Ss [dBm] "+sc.level+"\n");
 		}
-	}*/
+	}for(int i=history.Size() -1; i>=0; i--)
+		{
+			
+			_s = _s +"<br>       <b>Number Of Wifi connections :" + history.getHistory().get(i).Size() + "</b>" + "<br><br>";
+			
+
+			for(int a = 0; a < history.getHistory().get(i).Size(); a++){
+				
+				_s = _s+"<b><font color=\"red\">WiFi " + (a+1) + "</font></b>" + "<br>"+history.getHistory().get(i).GetIndex(a).ToString();
+				
+			}
+			
+		}
+		POI_Training.mainText.append(Html.fromHtml(_s));
+	
+	*/
 
 }

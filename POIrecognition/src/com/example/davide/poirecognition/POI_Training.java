@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -47,13 +48,14 @@ public class POI_Training extends Activity{
 	private int scansNumber;
 	private int interval;
 	private String _s;
+	public String name;
 	static public WeightList wlWeight;
 	private final String TAG="Training";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.poi_training);
-
+		name="";
 		poiName=(EditText)findViewById(R.id.PoiName);
 		numberScans=(EditText)findViewById(R.id.WiFiScanNumber);
 		intervalScans=(EditText)findViewById(R.id.TimeInterval);
@@ -80,14 +82,13 @@ public class POI_Training extends Activity{
 
 			@Override
 			public void onClick(View v) {
-				String name=null;
 				try{
 				Log.i(TAG, "saving data from user via EditTexts");
 				
 				name=poiName.getText().toString();
 				scansNumber=Integer.parseInt(numberScans.getText().toString());
 				interval=Integer.parseInt(intervalScans.getText().toString());
-				count =0;
+				count =scansNumber;
 				InputMethodManager inputManager= (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 				inputManager.hideSoftInputFromWindow((null==getCurrentFocus())?null:getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				Toast.makeText(getApplicationContext(), "Input Got Successfully", Toast.LENGTH_SHORT).show();
@@ -106,8 +107,9 @@ public class POI_Training extends Activity{
 				timerTask=new TimerTask(){
 					@Override
 					public void run() {
+						
+						count--;
 						Log.i(TAG, "Scansione");
-						count++;
 						startScan();
 								/*if(count==2)
 								{
@@ -119,49 +121,52 @@ public class POI_Training extends Activity{
 									wlWeight=history.Merge(count-1, wlWeight);
 								
 								}*/
-								if(count==scansNumber)
-								{
+								if(count==0)
+								{Log.i(TAG, "termine scansione");
 									timer.cancel();
+									WeightFilter();								
+									String storedir = Environment.getExternalStorageDirectory()+"/list";
+									File f = new File(storedir);
+									if(!f.exists())
+										if(!f.mkdir()){
+											Log.e("Error","Can't create download directory");
+										}
+
+										if(storedir!=null)
+									{
+											String str="";
+											for(int i=0; i<wlWeight.Size(); i++)
+											{
+												str+="string : "+wlWeight.getWeightsList().get(i).getApMac()+"weight : "+wlWeight.getWeightsList().get(i).getWeight()+" \n";
+											
+											}
+											FileOutputStream fostream=null;
+											OutputStreamWriter outputwriter=null;
+											try {
+												String filename=storedir+"/"+name+".txt";
+												fostream = new FileOutputStream(filename);
+												outputwriter=new OutputStreamWriter(fostream);
+											} catch (IOException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+											;
+											try {
+												outputwriter.append(str);
+												outputwriter.close();
+												fostream.close();
+											} catch (IOException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+											
+									}
 								}
 					}
 				};
 				timer.schedule(timerTask, 0, interval*1000/scansNumber);
 				}				
-				String storedir = Environment.getExternalStorageDirectory()+"/list";
-				String fingerPrint= storedir+"/"+name+".txt";
-				File f = new File(storedir);
-				if(!f.exists())
-					if(!f.mkdir()){
-						storedir=null;
-						Log.e("Error","Can't create download directory");
-					}
-
-					if(storedir!=null)
-				{
-						String str="";
-						for(int i=0; i<wlWeight.Size(); i++)
-						{
-							str+="string : "+wlWeight.getWeightsList().get(i).getApMac()+"weight : "+wlWeight.getWeightsList().get(i).getWeight()+" \n";
-						
-						}
-						FileWriter filewriter=null;
-						try {
-							filewriter = new FileWriter(fingerPrint);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						try {
-							filewriter.write(str);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-				}
-					else{
-						Toast.makeText(context, "Folder", Toast.LENGTH_LONG).show();
-						
-					}
+				
 				
 			}
 		});
@@ -194,6 +199,23 @@ public class POI_Training extends Activity{
 			return pos;
 		else
 			return -1;
+	}
+	public void WeightFilter()
+	{
+		double threshold=0.01;
+		String macAddress="";
+		Log.i(TAG, "Enter weight filter");
+		for(int a=0; a<wlWeight.getWeightsList().size(); a++)
+		{
+			//Log.i(TAG, "iterator");
+			if(wlWeight.getWeightsList().get(a).getWeight()<threshold)
+				{macAddress=wlWeight.getWeightsList().get(a).getApMac();
+				Log.i(TAG, macAddress);
+					wlWeight.getWeightsList().remove(a);
+					a=0;
+				}
+		}
+		
 	}
 	public void startScan(){		
 		// TODO Auto-generated method stub

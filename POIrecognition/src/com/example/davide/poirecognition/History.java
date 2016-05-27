@@ -31,7 +31,7 @@ public class History {
 		int pos=0;
 		for(int a=0; a<listAccess.Size(); a++)
 		{
-			if(listAccess.GetIndex(a).getMac()==mac)
+			if(listAccess.GetIndex(a).getMac().compareTo(mac)==0)
 			{
 				pos=a;
 				isPresent=true;
@@ -68,7 +68,9 @@ public class History {
 			int pos2 = GetI(j, wl.getWeightsList().get(k).getApMac());
 			if(pos1!=-1&&pos2!=-1)
 			{
-			weight = 1/(double)(Math.abs(pos1-pos2) + (pos1+pos2)/2);
+				pos1++;
+				pos2++;
+			weight = 1./((double)Math.abs(pos1-pos2) + (double)(pos1+pos2)/2);
 			wl.getWeightsList().get(k).setWeight(weight);	
 			}
 			else
@@ -115,12 +117,14 @@ public class History {
 		apWeight swap;
 		for(int k = 0; k < wl1.Size(); k++)
 		{
-			double weight;
+			double weight=0;
 			int pos1 = GetI(index, wl1.getWeightsList().get(k).getApMac());
 			int pos2 = wl.GetI( wl1.getWeightsList().get(k).getApMac());
 			if(pos1!=-1&&pos2!=-1)
 			{
-			weight = 1/(double)((Math.abs(pos1-pos2) + (pos1+pos2)/2));
+				pos1++;
+				pos2++;
+			weight = 1.0/((double)(Math.abs(pos1-pos2) + (double)(pos1+pos2)/2));
 			wl1.getWeightsList().get(k).setWeight(weight);
 			}
 			else

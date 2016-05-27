@@ -32,7 +32,7 @@ public class WeightList {
 		int pos=0;
 		for(int a=0; a<weightsList.size(); a++)
 		{
-			if(weightsList.get(a).getApMac()==mac)
+			if(weightsList.get(a).getApMac().compareTo(mac)==0)
 			{
 				pos=a;
 				isPresent=true;

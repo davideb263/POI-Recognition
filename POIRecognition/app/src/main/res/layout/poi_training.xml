@@ -3,38 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.davide.poirecognition.MainActivity"
-    android:layout_gravity="center_horizontal"
-    android:orientation="vertical"
-    >
+    tools:context="com.example.davide.poirecognition.MainActivity">
 
-   <EditText
-       android:id="@+id/PoiName"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:inputType="text"
-       android:hint="@string/PoiNameHint"/>
+    <EditText
+        android:id="@+id/PoiName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/PoiNameHint"
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/WiFiScanNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:hint="@string/WiFiScanNumberHint"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/TimeInterval"
-        android:layout_alignParentStart="true" />
+        android:hint="@string/WiFiScanNumberHint"
+        android:inputType="number" />
+
     <EditText
         android:id="@+id/TimeInterval"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
-        android:hint="@string/TimeIntervalHint"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/PoiName"
-        android:layout_alignParentStart="true" />
+        android:hint="@string/TimeIntervalHint"
+        android:inputType="number" />
 
     <Button
         android:id="@+id/Training"
@@ -42,35 +42,37 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/BttTraining"
-        android:layout_below="@+id/WiFiScanNumber"
+        android:layout_alignTop="@+id/ReturnMain"
         android:layout_alignParentStart="true" />
+
     <Button
-        android:id="@+id/getData"
-        android:text="@string/BttGetData"
-        android:clickable="true"
+        android:id="@+id/ReturnMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/Training"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/BttReturnMain"
+        android:layout_below="@+id/WiFiScanNumber"
         android:layout_alignEnd="@+id/TimeInterval" />
 
     <ScrollView
-    android:id="@+id/scrollScan"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@+id/Training">
-    <LinearLayout
+        android:id="@+id/scrollScan"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/Training">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textScan" />
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textScan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-</ScrollView>
+        </LinearLayout>
+
+    </ScrollView>
 
 
 </RelativeLayout>

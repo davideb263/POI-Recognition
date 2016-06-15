@@ -2,16 +2,14 @@ package com.example.davide.poirecognition;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
-
-    Button bttStart = null;
-    Button bttTrain = null;
-
+public class MainActivity extends Activity {
+    Button bttstart = null;
+    Button btttrain = null;
     final int START_REQUEST_CODE = 1;
     final int TRAIN_REQUEST_CODE = 2;
 
@@ -19,14 +17,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bttstart = (Button) findViewById(R.id.Start);
+        btttrain = (Button) findViewById(R.id.Train);
+        bttstart.setOnClickListener(new OnClickListener() {
 
-        bttStart = (Button)findViewById(R.id.Start);
-        bttTrain = (Button)findViewById(R.id.Train);
-
-        bttStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String s = "start";
                 Intent startIntent = new Intent("com.example.davide.poirecognitionStart");
                 startIntent.putExtra("stringStart", s);
@@ -35,14 +31,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        bttTrain.setOnClickListener(new View.OnClickListener() {
+        btttrain.setOnClickListener(new OnClickListener() {
+
             @Override
             public void onClick(View v) {
-
-                String s = "train";
+                String s2 = "train";
                 Intent trainIntent = new Intent("com.example.davide.poirecognitionTrain");
-                trainIntent.putExtra("stringTrain", s);
+                trainIntent.putExtra("stringTrain", s2);
                 startActivityForResult(trainIntent, TRAIN_REQUEST_CODE);
+
             }
         });
     }
@@ -50,20 +47,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == START_REQUEST_CODE)
-        {
-            if (resultCode == Activity.RESULT_OK)
-            {
+        if (requestCode == START_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
                 String s = data.getStringExtra("recognition");
+
             }
-        }
-        else if(requestCode == TRAIN_REQUEST_CODE)
-        {
-            if (resultCode == Activity.RESULT_OK)
-            {
-                String s = data.getStringExtra("training");
+        } else if (requestCode == TRAIN_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                String t = data.getStringExtra("training");
+
             }
+
         }
     }
+
 }

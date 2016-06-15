@@ -1,162 +1,232 @@
 package com.example.davide.poirecognition;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.Timer;
+import java.util.TimerTask;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-
 public class POI_Training extends Activity {
 
-    private static final String TAG = "Training";
     private EditText poiName = null;
-    private EditText numberOfScans = null;
-    private EditText intervalOfScans = null;
-    private Button bttTraining = null;
-    private Button bttGetData = null;
-
-    public History history;
+    private EditText numberScans = null;
+    private EditText intervalScans = null;
+    private Button bttTrain = null;
+    private Button bttFinish = null;
+    private WifiReceiver wifiReceiver = null;
+    public static TextView mainText = null;
+    private Context context = null;
+    public static WifiManager wf = null;
     public TimerTask timerTask;
     public Timer timer;
-    public static WifiManager mWifiManager = null;
-    public static TextView scanText;
-
-    private Context context = null;
-    private WifiReceiver receiverWifi = null;
-
-    public String name = null;
-    public int scansNum = 0;
-    public int interval= 0;
+    public static History history;
     public int count = 0;
+    private int scansNumber;
+    private int interval;
+    private String _s;
+    public String name;
+    static public WeightList wlWeight;
+    private final String TAG = "Training";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "creating the training activity");
         setContentView(R.layout.poi_training);
-
-        context = this;
-
-        poiName = (EditText)findViewById(R.id.PoiName);
-        numberOfScans = (EditText)findViewById(R.id.WiFiScanNumber);
-        intervalOfScans = (EditText)findViewById(R.id.TimeInterval);
-        bttTraining = (Button)findViewById(R.id.Training);
-        bttGetData = (Button)findViewById(R.id.getData);
-        scanText = (TextView)findViewById(R.id.textScan);
-
+        name = "";
+        poiName = (EditText) findViewById(R.id.PoiName);
+        numberScans = (EditText) findViewById(R.id.WiFiScanNumber);
+        intervalScans = (EditText) findViewById(R.id.TimeInterval);
+        bttTrain = (Button) findViewById(R.id.Training);
+        bttFinish = (Button) findViewById(R.id.ReturnMain);
         Intent trainingIntent = getIntent();
         String s = trainingIntent.getStringExtra("stringTrain");
+        mainText = (TextView) findViewById(R.id.textScan);
+        context = getApplicationContext();
+
+
         history = new History();
-        receiverWifi = new WifiReceiver(history);
+        wlWeight = new WeightList();
+        wf = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        // wifi scanned value broadcast receiver
+        wifiReceiver = new WifiReceiver(history, wlWeight);
+        // Register broadcast receiver
+        // Broacast receiver will automatically call when number of wifi connections changed
+        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        Log.i(TAG, "creating the training activity");
 
-        mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 
+        bttTrain.setOnClickListener(new OnClickListener() {
 
-
-        bttGetData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     Log.i(TAG, "saving data from user via EditTexts");
+
                     name = poiName.getText().toString();
-                    scansNum = Integer.parseInt(numberOfScans.getText().toString());
-                    interval = Integer.parseInt(intervalOfScans.getText().toString());
-
-                    //this hide the keyboard when the user click the GetData button
-                    InputMethodManager inputManager = (InputMethodManager)
-                            getSystemService(Context.INPUT_METHOD_SERVICE);
-
+                    scansNumber = Integer.parseInt(numberScans.getText().toString());
+                    interval = Integer.parseInt(intervalScans.getText().toString());
+                    count = scansNumber;
+                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-
                     Toast.makeText(getApplicationContext(), "Input Got Successfully", Toast.LENGTH_SHORT).show();
                 } catch (NumberFormatException e) {
-                    Toast.makeText(getApplicationContext(), "Invalid Integer. Void or to long", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Not correct input", Toast.LENGTH_LONG).show();
+
                 }
-            }
-        });
-
-        bttTraining.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(name == null || scansNum == 0 || interval == 0)
-                    Toast.makeText(getApplicationContext(), "Insert all data first", Toast.LENGTH_SHORT).show();
-                else {
-
-                    //Running the task (Training)
-                    count = scansNum;
+                if (poiName == null || scansNumber <= 0 || interval <= 0) {
+                    Toast.makeText(getApplicationContext(), "Enter data first", Toast.LENGTH_SHORT).show();
+                } else {
                     timer = new Timer();
                     timerTask = new TimerTask() {
                         @Override
                         public void run() {
-                            Log.i(TAG, "running the task");
+
                             count--;
-                            StartScan();
-                            if(count == 0)
+                            Log.i(TAG, "Scansione");
+                            startScan();
+                                /*if(count==2)
+                                {
+									wlWeight=history.firstMerge(0, 1);
+
+								}
+								else if(count>2)
+								{
+									wlWeight=history.Merge(count-1, wlWeight);
+
+								}*/
+                            if (count == 0) {
+                                Log.i(TAG, "termine scansione");
                                 timer.cancel();
-                        }
+                                WeightFilter();
+                                String storedir = Environment.getExternalStorageDirectory() + "/POI_Fingerprints";
+                                File f = new File(storedir);
+                                if (!f.exists())
+                                    if (!f.mkdir()) {
+                                        Log.e("Error", "Can't create directory");
+                                    }
+
+                                //if (storedir != null) {
+                                    String str = "";
+                                    for (int i = 0; i < wlWeight.Size(); i++) {
+                                        //str += "MAC : " + wlWeight.getWeightsList().get(i).getApMac() + "\nWEIGHT : " + wlWeight.getWeightsList().get(i).getWeight() + "\n\n";
+                                        //str +=  wlWeight.getWeightsList().get(i).getApMac() + "\n" + wlWeight.getWeightsList().get(i).getWeight() + "\n";
+                                        str += wlWeight.getWeightsList().get(i).getApMac() + "\n";
+
+                                    }
+                                    FileOutputStream fostream = null;
+                                    OutputStreamWriter outputwriter = null;
+                                    try {
+                                        String filename = storedir + "/" + name + ".txt";
+                                        fostream = new FileOutputStream(filename);
+                                        outputwriter = new OutputStreamWriter(fostream);
+                                    } catch (IOException e) {
+
+                                        e.printStackTrace();
+                                    }
+
+                                    try {
+                                        outputwriter.append(str);
+                                        outputwriter.close();
+                                        fostream.close();
+
+                                    }catch (NullPointerException npe)
+                                    {
+                                        Log.e(TAG, npe.getMessage());
+                                        npe.printStackTrace();
+                                    }catch (IOException e) {
+
+                                        Log.e(TAG, e.getMessage());
+
+                                    }
+
+                                }
+                            }
+                        //}
                     };
-                    timer.schedule(timerTask, 0, interval*1000/scansNum);
+                    timer.schedule(timerTask, 0, interval * 1000 / scansNumber);
                 }
+
+
+            }
+        });
+        bttFinish.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+
+                setResult(Activity.RESULT_OK, new Intent().putExtra("training", "trainingString"));
+                finish();
             }
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "Closing Training activity.(onDestroy)");
-        unregisterReceiver(receiverWifi);
-    }
-
-
-    public int GetI(int index, String mac)
-    {
-        boolean isPresent=false;
-        Scan listAccess= receiverWifi.getHistory().GetIndex(index);
-        int pos=0;
-        for(int a=0; a<listAccess.Size(); a++)
-        {
-            if(listAccess.GetIndex(a).getMac().equals(mac))
-            {
-                pos=a;
-                isPresent=true;
+    public int GetI(int index, String mac) {
+        boolean isPresent = false;
+        Scan listAccess = history.getHistory().get(index);
+        int pos = 0;
+        for (int a = 0; a < listAccess.Size(); a++) {
+            if (listAccess.GetIndex(a).getMac().equals(mac)) {
+                pos = a;
+                isPresent = true;
             }
 
         }
-        if(isPresent)
+        if (isPresent)
             return pos;
         else
             return -1;
     }
 
-    public void StartScan() {
-        Log.i(TAG, "StartTimerScan");
-
-        if(!mWifiManager.isWifiEnabled())
-        {
-            //Toast.makeText(getApplicationContext(), "wifi is disable... miking it enable", Toast.LENGTH_SHORT).show();
-            mWifiManager.setWifiEnabled(true);
+    public void WeightFilter() {
+        double threshold = 0.01;
+        String macAddress = "";
+        Log.i(TAG, "Enter weight filter");
+        for (int a = 0; a < wlWeight.getWeightsList().size(); a++) {
+            //Log.i(TAG, "iterator");
+            if (wlWeight.getWeightsList().get(a).getWeight() < threshold) {
+                macAddress = wlWeight.getWeightsList().get(a).getApMac();
+                Log.i(TAG, macAddress);
+                wlWeight.getWeightsList().remove(a);
+                a = 0;
+            }
         }
 
-        receiverWifi = new WifiReceiver(history);
-        registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-
-        Log.i(TAG, "starting scan");
-        mWifiManager.startScan();
-        //Toast.makeText(getApplicationContext(), "starting scan", Toast.LENGTH_SHORT).show();
     }
 
+    public void startScan() {
 
+        if (!wf.isWifiEnabled()) {
+            // If wifi disabled then enable it
+            //Toast.makeText(getApplicationContext(), "wifi is disabled..making it enabled", Toast.LENGTH_SHORT).show();
+            // Enable WiFi
+            wf.setWifiEnabled(true);
+        }
+        //Toast.makeText(getApplicationContext(), "Start scanning", Toast.LENGTH_SHORT).show();
+        wf.startScan();
+        //mainText.setText("Starting");
+
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(wifiReceiver);
+        Log.i(TAG, "Closing Training activity.(onDestroy)");
+    }
 }

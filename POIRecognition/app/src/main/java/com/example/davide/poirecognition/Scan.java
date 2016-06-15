@@ -2,10 +2,13 @@ package com.example.davide.poirecognition;
 
 import java.util.ArrayList;
 
-
 public class Scan {
 
     private ArrayList<AccessPoint> scan;
+
+    public Scan() {
+        scan = new ArrayList<AccessPoint>();
+    }
 
     public ArrayList<AccessPoint> getScan() {
         return scan;
@@ -15,24 +18,19 @@ public class Scan {
         this.scan = scan;
     }
 
-    public Scan(){
-        this.scan = new ArrayList<AccessPoint>();
+    public void Add(AccessPoint accesspoint) {
+        scan.add(accesspoint);
     }
 
-    public void Add(AccessPoint ap){
-        scan.add(ap);
-    }
-
-    public int Size()
-    {
+    public int Size() {
         return scan.size();
     }
-    public AccessPoint GetIndex(int index)
-    {
+
+    public AccessPoint GetIndex(int index) {
         return scan.get(index);
     }
-    public void SetIndex(int index, AccessPoint ap)
-    {
+
+    public void SetIndex(int index, AccessPoint ap) {
         scan.set(index, ap);
     }
 }

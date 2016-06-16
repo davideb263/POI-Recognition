@@ -4,9 +4,7 @@ public class AccessPoint{
 
 	private String mac;
 	private String ssid;
-	private double rss;
-
-	
+	private double rss;	
 	
 	public String getMac() {
 		return mac;
@@ -38,8 +36,8 @@ public class AccessPoint{
 		ssid=_ssid;
 		rss=_rss;
 	}
-
-	public String ToString()
+	@Override
+	public String toString()
 	{
 		String result=	"<b>SSID:</b> " + ssid+ "<br>" +
 				"<b>MAC:</b> " + mac + "<br>" +

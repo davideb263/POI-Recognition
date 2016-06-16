@@ -15,33 +15,32 @@ public class History {
 	public void setHistory(ArrayList<Scan> history) {
 		this.history = history;
 	}
-	public void Add(Scan scan)
+	public void add(Scan scan)
 	{
-		history.add(scan);
-		
+		history.add(scan);		
 	}
-	public int Size()
+	public int size()
 	{
 		return history.size();
 	}
-	public int GetI(int index, String mac)
+	public Scan getScan(int index)
 	{
-		boolean isPresent=false;
+		return history.get(index);
+	}
+	public void setScan(int index, Scan s)
+	{
+		history.set(index, s);
+	}
+	public ArrayList<String> stringList(int index)
+	{
+		ArrayList<String> stringList= new ArrayList<String>();
 		Scan listAccess= history.get(index);
-		int pos=0;
 		for(int a=0; a<listAccess.Size(); a++)
 		{
-			if(listAccess.GetIndex(a).getMac().compareTo(mac)==0)
-			{
-				pos=a;
-				isPresent=true;
-			}
+			stringList.add(listAccess.getAp(a).getMac());
 
 		}
-		if(isPresent)
-			return pos;
-		else
-			return -1;
+			return stringList;
 	}
 	
 	public WeightList firstMerge(int i, int j)
@@ -51,33 +50,32 @@ public class History {
 		WeightList wl=new WeightList();
 		for(int a=0; a<list1.Size(); a++)
 		{
-			wl.Add(list1.GetIndex(a).getMac(), (double)0);			
+			wl.Add(list1.getAp(a).getMac(), (double)0);			
 		}
 		for(int c=0; c<list2.Size(); c++)
 			{
-				if(wl.GetI(list2.GetIndex(c).getMac())==-1)
+				if(Functions.GetI(wl.stringList(), list2.getAp(c).getMac())==-1)
 				{
-					wl.Add(list2.GetIndex(c).getMac(), (double)0);
+					wl.Add(list2.getAp(c).getMac(), (double)0);
 				}				
 			}
 		apWeight swap;
 		for(int k = 0; k < wl.Size(); k++)
 		{
 			double weight=0;
-			int pos1 = GetI(i, wl.getWeightsList().get(k).getApMac());
-			int pos2 = GetI(j, wl.getWeightsList().get(k).getApMac());
+			int pos1 = Functions.GetI(stringList(i), wl.getWeightsList().get(k).getApMac());
+			int pos2 = Functions.GetI(stringList(j), wl.getWeightsList().get(k).getApMac());
 			if(pos1!=-1&&pos2!=-1)
 			{
 				pos1++;
 				pos2++;
-			weight = 1./((double)Math.abs(pos1-pos2) + (double)(pos1+pos2)/2);
+			weight = Functions.weight(pos1, pos2);
 			wl.getWeightsList().get(k).setWeight(weight);	
 			}
 			else
 			{
 				wl.getWeightsList().get(k).setWeight(0);
-			}
-			
+			}	
 			
 		}
 		
@@ -105,11 +103,11 @@ public class History {
 		WeightList wl1 =new WeightList();
 		for(int a=0; a<s.Size(); a++)
 		{
-			wl1.Add(s.GetIndex(a).getMac(), (double)0);			
+			wl1.Add(s.getAp(a).getMac(), (double)0);			
 		}
 		for(int c=0; c<wl.Size(); c++)
 			{
-				if(wl1.GetI(wl.getWeightsList().get(c).getApMac())==-1)
+				if(Functions.GetI(wl1.stringList(), wl.getWeightsList().get(c).getApMac())==-1)
 				{
 					wl1.Add(wl.getWeightsList().get(c).getApMac(), (double)0);
 				}				
@@ -118,13 +116,13 @@ public class History {
 		for(int k = 0; k < wl1.Size(); k++)
 		{
 			double weight=0;
-			int pos1 = GetI(index, wl1.getWeightsList().get(k).getApMac());
-			int pos2 = wl.GetI( wl1.getWeightsList().get(k).getApMac());
+			int pos1 = Functions.GetI(stringList(index), wl1.getApWeight(k).getApMac());
+			int pos2 = Functions.GetI( wl.stringList(),wl1.getApWeight(k).getApMac());
 			if(pos1!=-1&&pos2!=-1)
 			{
 				pos1++;
 				pos2++;
-			weight = 1.0/((double)(Math.abs(pos1-pos2) + (double)(pos1+pos2)/2));
+			weight =Functions.weight(pos1, pos2);
 			wl1.getWeightsList().get(k).setWeight(weight);
 			}
 			else
@@ -135,10 +133,10 @@ public class History {
 		}
 		for(int m=0; m<wl1.Size(); m++)
 		{
-			if(wl.GetI((wl1.getWeightsList().get(m).getApMac()))!=-1)
+			if(Functions.GetI(wl.stringList(),wl1.getApWeight(m).getApMac())!=-1)
 			{
-				int in=wl.GetI(wl1.getWeightsList().get(m).getApMac());
-				wl1.getWeightsList().get(m).setWeight((wl1.getWeightsList().get(m).getWeight()+(index)*wl.getWeightsList().get(in).getWeight())/(double)(index+1));
+				int in=Functions.GetI(wl.stringList(),wl1.getApWeight(m).getApMac());
+				wl1.getWeightsList().get(m).setWeight((wl1.getApWeight(m).getWeight()+(index)*wl.getApWeight(in).getWeight())/(double)(index+1));
 			}
 			else
 			{
@@ -147,18 +145,14 @@ public class History {
 		}
 		for(int l=0; l<wl1.Size(); l++)
 			for(int d=l; d<wl1.Size(); d++)
-			{
-			
-				{
-			
+			{			
+				{			
 					if(wl1.getWeightsList().get(l).getWeight() < wl1.getWeightsList().get(d).getWeight())
 					{
 						swap = wl1.getWeightsList().get(l);
 						wl1.getWeightsList().set(l, wl1.getWeightsList().get(d)); 
-						wl1.getWeightsList().set(d, swap);
-						
-					}
-			
+						wl1.getWeightsList().set(d, swap);						
+					}			
 				}
 			}
 		return wl1;

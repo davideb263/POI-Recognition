@@ -1,8 +1,5 @@
 package com.example.davide.poirecognition;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedMap;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,23 +28,23 @@ public class WiFiScanner extends BroadcastReceiver
 		count++;
 		swapAp=new AccessPoint();
 		wifiList = POI_Training.wf.getScanResults(); 
-		POI_Training.history.Add(new Scan());
+		POI_Training.history.add(new Scan());
 		//POI_training.scanList.clear();
 		for(int i = 0; i < wifiList.size(); i++){
 
-			POI_Training.history.getHistory().get(POI_Training.history.Size()-1).Add(new AccessPoint(wifiList.get(i).BSSID.toString(),wifiList.get(i).SSID.toString(),wifiList.get(i).level ));
+			POI_Training.history.getScan(POI_Training.history.size()-1).add(new AccessPoint(wifiList.get(i).BSSID.toString(),wifiList.get(i).SSID.toString(),wifiList.get(i).level ));
 	
 		}
-		for(int i=0; i<POI_Training.history.getHistory().get(POI_Training.history.Size() -1).Size(); i++)
+		for(int i=0; i<POI_Training.history.getHistory().get(POI_Training.history.size() -1).Size(); i++)
 		{
 			
-			for(int j=i; j<POI_Training.history.getHistory().get(POI_Training.history.Size() -1).Size(); j++)
+			for(int j=i; j<POI_Training.history.getHistory().get(POI_Training.history.size() -1).Size(); j++)
 			{				
-				if(POI_Training.history.getHistory().get(POI_Training.history.Size() -1).GetIndex(i).getRss()<POI_Training.history.getHistory().get(POI_Training.history.Size()-1).GetIndex(j).getRss())
+				if(POI_Training.history.getHistory().get(POI_Training.history.size() -1).getAp(i).getRss()<POI_Training.history.getHistory().get(POI_Training.history.size()-1).getAp(j).getRss())
 				{
-					swapAp=POI_Training.history.getHistory().get(POI_Training.history.Size() -1).GetIndex(i);
-					POI_Training.history.getHistory().get(POI_Training.history.Size() -1).SetIndex(i, POI_Training.history.getHistory().get(POI_Training.history.Size()-1).GetIndex(j) ); 
-					POI_Training.history.getHistory().get(POI_Training.history.Size()-1).SetIndex(j, swapAp);
+					swapAp=POI_Training.history.getHistory().get(POI_Training.history.size() -1).getAp(i);
+					POI_Training.history.getHistory().get(POI_Training.history.size() -1).setAp(i, POI_Training.history.getHistory().get(POI_Training.history.size()-1).getAp(j) ); 
+					POI_Training.history.getHistory().get(POI_Training.history.size()-1).setAp(j, swapAp);
 				}
 			}
 			

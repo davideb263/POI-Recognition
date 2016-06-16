@@ -25,23 +25,20 @@ public class WeightList {
 	public void setWeightsList(ArrayList<apWeight> weightsList) {
 		this.weightsList = weightsList;
 	}
-	
-	public int GetI(String mac)
+	public void setApWeight(int index, apWeight ap)	{
+		weightsList.set(index, ap);		
+	}
+	public apWeight getApWeight(int i)	{
+		return weightsList.get(i);
+	}
+	public ArrayList<String> stringList()
 	{
-		boolean isPresent=false;
-		int pos=0;
+		ArrayList<String> ap= new ArrayList<String>();
 		for(int a=0; a<weightsList.size(); a++)
 		{
-			if(weightsList.get(a).getApMac().compareTo(mac)==0)
-			{
-				pos=a;
-				isPresent=true;
-			}
+			ap.add(weightsList.get(a).getApMac());
 
 		}
-		if(isPresent)
-			return pos;
-		else
-			return -1;
+			return ap;
 	}
 }

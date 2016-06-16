@@ -125,7 +125,7 @@ public class POI_Training extends Activity{
 								{Log.i(TAG, "termine scansione");
 									timer.cancel();
 									WeightFilter();								
-									String storedir = Environment.getExternalStorageDirectory()+"/list";
+									String storedir = Environment.getExternalStorageDirectory()+"/POI_Fingerprints";
 									File f = new File(storedir);
 									if(!f.exists())
 										if(!f.mkdir()){
@@ -135,10 +135,10 @@ public class POI_Training extends Activity{
 										if(storedir!=null)
 									{
 											String str="";
-											for(int i=0; i<wlWeight.Size(); i++)
-											{
-												str+="string : "+wlWeight.getWeightsList().get(i).getApMac()+"weight : "+wlWeight.getWeightsList().get(i).getWeight()+" \n";
-											
+											for (int i = 0; i < wlWeight.Size(); i++) { 
+				                            //str += "MAC : " + wlWeight.getWeightsList().get(i).getApMac() + "\nWEIGHT : " + wlWeight.getWeightsList().get(i).getWeight() + "\n\n"; 
+											//str +=  wlWeight.getWeightsList().get(i).getApMac() + "\n" + wlWeight.getWeightsList().get(i).getWeight() + "\n"; 
+											str += wlWeight.getWeightsList().get(i).getApMac() + "\n";
 											}
 											FileOutputStream fostream=null;
 											OutputStreamWriter outputwriter=null;
@@ -155,9 +155,9 @@ public class POI_Training extends Activity{
 												outputwriter.append(str);
 												outputwriter.close();
 												fostream.close();
-											} catch (IOException e) {
+											} catch (IOException exc) {
 												// TODO Auto-generated catch block
-												e.printStackTrace();
+												Log.e(TAG,"errore");
 											}
 											
 									}

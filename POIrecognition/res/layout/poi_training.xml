@@ -2,95 +2,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_gravity="center_horizontal"
-    tools:context="com.example.davide.poirecognition.MainActivity" 
-    >
-        <TextView
+    android:orientation="vertical"
+    tools:context="com.example.davide.poirecognition.MainActivity" >
+
+    <TextView
         android:id="@+id/Poitv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/poitv" />
-        <EditText 
-            android:id="@+id/PoiName"
-            android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:inputType="text"
-			android:layout_alignParentStart="true"
-			android:layout_below="@+id/Poitv"
-    		android:hint="@string/PoiNameHint"
-            />
-        <TextView
+
+    <EditText
+        android:id="@+id/PoiName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/Poitv"
+        android:hint="@string/PoiNameHint"
+        android:inputType="text" />
+
+    <TextView
         android:id="@+id/numScanstv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/PoiName"
         android:text="@string/numscanstv" />
-        <EditText 
-            android:id="@+id/WiFiScanNumber"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/numScanstv"
-            android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			       android:inputType="number"
-    android:hint="@string/WiFiScanNumberHint"
-            />
-        <TextView
+
+    <EditText
+        android:id="@+id/WiFiScanNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/numScanstv"
+        android:hint="@string/WiFiScanNumberHint"
+        android:inputType="number" />
+
+    <TextView
         android:id="@+id/intervalScanstv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/intervalscanstv"
-        android:layout_below="@+id/WiFiScanNumber"
         android:layout_alignParentStart="true"
-         />
-        <EditText 
-            android:id="@+id/TimeInterval"
-            android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			       android:inputType="number"
-    android:hint="@string/TimeIntervalHint"
-    android:layout_below="@+id/intervalScanstv"
-    android:layout_alignParentStart="true"
-            />
-	<Button 
-            android:id="@+id/getData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:text="@string/BttGetData"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/Training"
-            android:layout_alignStart="@+id/Training"
-            android:layout_alignEnd="@+id/TimInterval"
-            android:layout_gravity="center_horizontal"
-                        />
-	<ScrollView 
-	    android:layout_below="@+id/getData"
-	    android:id="@+id/scrollScan"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    >
-	    <LinearLayout
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical"
-	         >
-<TextView 
-    android:id="@+id/textScan"
-    android:layout_height="wrap_content"
-	android:layout_width="wrap_content"
-    />
-	 </LinearLayout>
-	 </ScrollView>
+        android:layout_below="@+id/WiFiScanNumber"
+        android:text="@string/intervalscanstv" />
 
-	<Button
-	    android:id="@+id/Training"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentLeft="true"
-	    android:layout_alignParentStart="true"
-	    android:layout_below="@+id/TimeInterval"
-	    android:text="@string/BttTraining" />
-	
+    <EditText
+        android:id="@+id/TimeInterval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/intervalScanstv"
+        android:hint="@string/TimeIntervalHint"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/getData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/TimeInterval"
+        android:layout_alignParentStart="true"
+        android:layout_alignStart="@+id/Training"
+        android:layout_below="@+id/Training"
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:text="@string/BttGetData" />
+
+    <ScrollView
+        android:id="@+id/scrollScan"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/getData" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textScan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/Training"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/TimeInterval"
+        android:text="@string/BttTraining" />
+
 </RelativeLayout>

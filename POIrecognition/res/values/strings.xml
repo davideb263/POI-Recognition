@@ -13,7 +13,7 @@
 	<string name="intervalscanstv">Interval temporal scans:</string>
 	<string name="TimeIntervalHint">Interval temporal scans</string>
 	<string name="BttTraining">Training</string>
-	<string name="PoiStayLength"></string>
+	<string name="PoiStayLength">"textview"</string>
 	<string name="recognitionLabel">Recognition POI</string>
 	<string name="BttRec">Recognition of place</string>
 	<string name="trainLabel">Training POI</string>

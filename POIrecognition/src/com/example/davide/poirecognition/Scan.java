@@ -14,11 +14,10 @@ public ArrayList<AccessPoint> getScan() {
 public void setScan(ArrayList<AccessPoint> scan) {
 	this.scan = scan;
 }
-public void add(AccessPoint accesspoint)
-{
+public void add(AccessPoint accesspoint){
 	scan.add(accesspoint);
 }
-public int Size(){
+public int size(){
 	return scan.size();
 }
 public AccessPoint getAp(int index){

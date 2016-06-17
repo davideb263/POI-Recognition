@@ -19,7 +19,6 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,15 +36,15 @@ public class POI_Recognition extends Activity {
 
     private List<String> fpDataBase = null;
     private List<String> fpList = null;
-    private ArrayList<String> apList = null;
     private ArrayList<Double> matchList = null;
-
+    
+    private BroadcastReceiver broadcastReceiver;
     public TimerTask timerTask;
     public Timer timer;
     public int count = 0;
 
     WifiManager wifi;
-    List<ScanResult> results;
+    List<ScanResult> results=null;
     ArrayList<String> recScan = null;
     double[][] weightMatrix;
     ArrayList<ArrayList<String>> apListAll; 
@@ -56,40 +55,46 @@ public class POI_Recognition extends Activity {
         poiSL = (TextView) findViewById(R.id.poiSL);
         bttback = (Button) findViewById(R.id.BackToMain);
         bttRec = (Button) findViewById(R.id.Recognition);
-        Intent recognitionIntent = getIntent();
-        String s = recognitionIntent.getStringExtra("stringStart");
+        getIntent();
+        //recognitionIntent.getStringExtra("stringStart");
 
         fpDataBase = new ArrayList<String>(); //lista dei percorsi
         fpList = new ArrayList<String>(); //lista contenuto fingerprint
-        apList = new ArrayList<String>(); //lista di access point della fp corrente
         recScan = new ArrayList<String>(); //lista di access point della recognition
         apListAll= new ArrayList<ArrayList<String>>();
-
         wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        if (!wifi.isWifiEnabled()) {
-            Toast.makeText(getApplicationContext(), "wifi is disabled..making it enabled", Toast.LENGTH_LONG).show();
-            wifi.setWifiEnabled(true);
-        }
-
-        registerReceiver(new BroadcastReceiver() {
+        
+        broadcastReceiver= new BroadcastReceiver(){
             @Override
             public void onReceive(Context c, Intent intent) {
-
-                recScan.clear();
+            	Log.i(TAG, "onReceive");
+                poiSL.setText("");
+                if (!wifi.isWifiEnabled()) {
+                Toast.makeText(getApplicationContext(), "wifi is disabled..making it enabled", Toast.LENGTH_LONG).show();
+                wifi.setWifiEnabled(true);
+                }
                 results = wifi.getScanResults();
+                Log.i(TAG, "scan");
+                recScan.clear();
                 for (int j = 0; j < results.size(); j++) {
+                	Log.i(TAG, results.get(j).BSSID);
                     recScan.add(results.get(j).BSSID);
                 }
-
+                allPlaceScore(recScan);
+                if(count==3)
+                {
+                matchList = weightAverage();
+                filter();
+                }
             }
-        }, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        };
+        registerReceiver(broadcastReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 
 
         bttback.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
+            	Log.i(TAG, "Recognition to main Activity");
                 setResult(Activity.RESULT_OK, new Intent().putExtra("recognition", "rec"));
                 finish();
             }
@@ -98,7 +103,6 @@ public class POI_Recognition extends Activity {
         bttRec.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 count = 0;
                 // creo una lista con i percorsi dei file contenenti le varie fingerprint.
                 File fpDirectory = new File(Environment.getExternalStorageDirectory() + "/POI_Fingerprints");
@@ -106,6 +110,7 @@ public class POI_Recognition extends Activity {
                 weightMatrix = new double[10][fpFiles.length];
                 for (int i = 0; i < fpFiles.length; i++) {
                     fpDataBase.add(fpFiles[i].getAbsolutePath());
+                    Log.i(TAG, fpFiles[i].getAbsolutePath());
                 }
                 apFromString();
                 timer = new Timer();
@@ -114,53 +119,49 @@ public class POI_Recognition extends Activity {
                     public void run() {
                         count++;
                         wifi.startScan();
-                        allPlaceScore(recScan);
-                        if (count == 9) {
-                            timer.cancel();
-                            matchList = weightAverage();
-                            filter();
+                        if (count == 3) { 
+                        	timer.cancel();
                         }
                     }
                 };
-                timer.schedule(timerTask, 0, 30000);
+                timer.schedule(timerTask, 0, 10000);
             }
         });
     }
     
     public void allPlaceScore(ArrayList<String> scanList) {
+    	Log.i(TAG, "allPlaceScore ap list size"+String.valueOf(apListAll.size()));
     	for(int j=0; j<apListAll.size(); j++)
-    	{
+    	{    		
     		weightMatrix[count][j] = singlePlaceScore(scanList, apListAll.get(j));
-    	}
-        
-    }
-    
+    	} 
+    	Log.i(TAG,"count " + String.valueOf(count));       
+    }    
     public void apFromString()
     {
     	for (int i = 0; i < fpDataBase.size(); i++) {
             try {
                 fpList.add(getStringFromFile(fpDataBase.get(i)));
-
-            } catch (IOException fnfe) {
+            } 
+            catch (IOException fnfe) {
                 Log.e(TAG, fnfe.getMessage());
             }
         }
-
         for (int j = 0; j < fpList.size(); j++) {  //per ogni place
-        	
+        	Log.i(TAG, "Lista");
             String[] parts = fpList.get(j).split("\n");
+            apListAll.add(new ArrayList<String>());
             for (int a = 0; a < parts.length; a++) {   //crea una lista di access point di un place
-                apList.add(parts[a]);                
+            	apListAll.get(apListAll.size()-1).add(parts[a]);                
             }
-            apListAll.add(apList);
-            apList.clear();
         }    	
     }
     public double singlePlaceScore(ArrayList<String> scan, ArrayList<String> place) {
-
+    	Log.i(TAG, "singlePlaceScore");
         double sumWeight = 0;
         ArrayList<String> commonAP = new ArrayList<String>();
-        for (int i = 0; i < scan.size(); i++) {
+        for (int i = 0; i < scan.size(); i++) 
+        {
             if (place.contains(scan.get(i))) {
                 commonAP.add(scan.get(i));
             }
@@ -172,7 +173,8 @@ public class POI_Recognition extends Activity {
             if (pos1 != -1 && pos2 != -1) {
                 pos1++;
                 pos2++;
-                sumWeight += 1.0 / ((double) (Math.abs(pos1 - pos2) + (double) (pos1 + pos2) / 2));
+                sumWeight += Functions.weight(pos1, pos2);
+                Log.i(TAG, "weight add"+String.valueOf(sumWeight));
             }
         }
         return sumWeight;
@@ -185,10 +187,9 @@ public class POI_Recognition extends Activity {
             Double d = 0d;
             for (int j = 0; j < weightMatrix.length; j++) {//per ogni place fa la somma della colonna
                 d += weightMatrix[j][i];
-
             }
-
-            result.add( d / 10);
+            result.add( d /3);
+            Log.i(TAG, "average"+String.valueOf(d));
         }
         return result;
     }
@@ -196,8 +197,10 @@ public class POI_Recognition extends Activity {
     public void filter() {
         double threshold = 0.1d;
         for (int i = 0; i < matchList.size(); i++) {
+        	Log.i(TAG, "filtro");
             if (matchList.get(i) < threshold) {
-                matchList.remove(matchList.get(i));
+            	Log.i(TAG, "to remove"+matchList.get(i));
+                matchList.remove(matchList.get(i));                
                 i = 0;
             }
         }
@@ -221,6 +224,15 @@ public class POI_Recognition extends Activity {
         //Make sure you close all streams.
         fin.close();
         return ret;
+    }
+    @Override
+    protected void onDestroy() {
+    	super.onDestroy();
+    	Log.i(TAG, "closing train");
+    	if(broadcastReceiver!=null)
+    	{
+    	unregisterReceiver(broadcastReceiver);
+    	}
     }
 
 }

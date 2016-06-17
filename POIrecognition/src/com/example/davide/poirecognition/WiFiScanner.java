@@ -1,29 +1,32 @@
 package com.example.davide.poirecognition;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
+import android.os.Environment;
 import android.text.Html;
+import android.util.Log;
 public class WiFiScanner extends BroadcastReceiver
 {
 	final String TAG ="WifiReceiver";
 	private List<ScanResult> wifiList = null;
 	private static String _s = "";
 	private AccessPoint swapAp;
-	private WifiManager wfm;
-	private static History history;
-	private static WeightList wlWeight;
 	private int count;
-	public WiFiScanner(History history, WeightList wlWeight)
+	private int numberOfScans;
+	public WiFiScanner(int max)
 	{
-		this.history=POI_Training.history;
-		this.wlWeight=POI_Training.wlWeight;
 		count=0;
+		numberOfScans=max;
 	}
 	// This method call when number of wifi connections changed
 	public void onReceive(Context c, Intent intent) {
+		Log.i(TAG, "scansione");
 		POI_Training.mainText.setText("new scan event ");
 		count++;
 		swapAp=new AccessPoint();
@@ -35,16 +38,16 @@ public class WiFiScanner extends BroadcastReceiver
 			POI_Training.history.getScan(POI_Training.history.size()-1).add(new AccessPoint(wifiList.get(i).BSSID.toString(),wifiList.get(i).SSID.toString(),wifiList.get(i).level ));
 	
 		}
-		for(int i=0; i<POI_Training.history.getHistory().get(POI_Training.history.size() -1).Size(); i++)
+		for(int i=0; i<POI_Training.history.getScan(POI_Training.history.size() -1).size(); i++)
 		{
 			
-			for(int j=i; j<POI_Training.history.getHistory().get(POI_Training.history.size() -1).Size(); j++)
+			for(int j=i; j<POI_Training.history.getScan(POI_Training.history.size() -1).size(); j++)
 			{				
-				if(POI_Training.history.getHistory().get(POI_Training.history.size() -1).getAp(i).getRss()<POI_Training.history.getHistory().get(POI_Training.history.size()-1).getAp(j).getRss())
+				if(POI_Training.history.getScan(POI_Training.history.size() -1).getAp(i).getRss()<POI_Training.history.getScan(POI_Training.history.size()-1).getAp(j).getRss())
 				{
-					swapAp=POI_Training.history.getHistory().get(POI_Training.history.size() -1).getAp(i);
-					POI_Training.history.getHistory().get(POI_Training.history.size() -1).setAp(i, POI_Training.history.getHistory().get(POI_Training.history.size()-1).getAp(j) ); 
-					POI_Training.history.getHistory().get(POI_Training.history.size()-1).setAp(j, swapAp);
+					swapAp=POI_Training.history.getScan(POI_Training.history.size() -1).getAp(i);
+					POI_Training.history.getScan(POI_Training.history.size() -1).setAp(i, POI_Training.history.getScan(POI_Training.history.size()-1).getAp(j) ); 
+					POI_Training.history.getScan(POI_Training.history.size()-1).setAp(j, swapAp);
 				}
 			}
 			
@@ -54,14 +57,14 @@ public class WiFiScanner extends BroadcastReceiver
 			POI_Training.wlWeight=POI_Training.history.firstMerge(0, 1);
 			
 		}
-		else if(count>2)
+		if(count>2)
 		{
 			POI_Training.wlWeight=POI_Training.history.Merge(count-1, POI_Training.wlWeight);
 		
 		}
 		if(count>=2)
-		{_s = _s +"<br>       <b>Number Of Wifi connections :" + POI_Training.wlWeight.Size() + "</b>" + "<br><br>";
-			for(int a=0; a<POI_Training.wlWeight.Size(); a++)
+		{_s = _s +"<br>       <b>Number Of Wifi connections :" + POI_Training.wlWeight.size() + "</b>" + "<br><br>";
+			for(int a=0; a<POI_Training.wlWeight.size(); a++)
 			{				
 			
 					
@@ -73,16 +76,45 @@ public class WiFiScanner extends BroadcastReceiver
 			POI_Training.mainText.append(Html.fromHtml(_s));
 			
 		}
+		if(count== numberOfScans)
+		{
+			POI_Training.mainText.append("End scansioni");
+			POI_Training.weightFilter();
+			Log.i(TAG, "number");
+			String storedir = Environment.getExternalStorageDirectory() + "/POI_Fingerprints";
+			File f = new File(storedir);
+			if (!f.exists())
+				if (!f.mkdir()) {
+					Log.e("Error", "Can't create download directory");
+				}
+
+			if (storedir != null) {
+				String str = "";
+				for (int i = 0; i < POI_Training.wlWeight.size(); i++) {
+					str += POI_Training.wlWeight.getWeightsList().get(i).getApMac() + "\n";
+				}
+				FileOutputStream fostream = null;
+				OutputStreamWriter outputwriter = null;
+				try {
+					String filename = storedir + "/" + POI_Training.name + ".txt";
+					fostream = new FileOutputStream(filename);
+					outputwriter = new OutputStreamWriter(fostream);
+				} catch (IOException e) {
+					Log.e(TAG, e.getMessage());
+				}
+				try {
+					outputwriter.append(str);
+					outputwriter.close();
+					fostream.close();
+				} catch (IOException exc) {
+					Log.e(TAG, "errore");
+				}
+
+			}
+		}
 			
 	}
 
-	public History getHistory() {
-		return history;
-	}
-	public void setHistory(History history) {
-		this.history = history;
-	}
-	
 /*private List <ScanResult> myScanResults=null;
 	@Override
 	public void onReceive(Context context, Intent arg1) {

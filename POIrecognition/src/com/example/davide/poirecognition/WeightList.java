@@ -1,22 +1,16 @@
 package com.example.davide.poirecognition;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
 
 public class WeightList {
 	private ArrayList<apWeight> weightsList;
-	public WeightList()
-	{
+	public WeightList()	{
 		weightsList	= new ArrayList<apWeight>();
 	}
-	public void Add(String string, Double number)
-	{
+	public void add(String string, Double number)	{
 		weightsList.add(new apWeight(string, number));
 	}
-	public int Size()
-	{
+	public int size()	{
 		return weightsList.size();
 	}
 	public ArrayList<apWeight> getWeightsList() {
@@ -31,8 +25,7 @@ public class WeightList {
 	public apWeight getApWeight(int i)	{
 		return weightsList.get(i);
 	}
-	public ArrayList<String> stringList()
-	{
+	public ArrayList<String> stringList(){
 		ArrayList<String> ap= new ArrayList<String>();
 		for(int a=0; a<weightsList.size(); a++)
 		{

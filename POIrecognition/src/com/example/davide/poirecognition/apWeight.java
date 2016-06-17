@@ -1,6 +1,6 @@
 package com.example.davide.poirecognition;
 
-public class apWeight {
+public class apWeight {// lista di mac e pesi
 	private String apMac;
 	private double weight;
 	public String getApMac() {

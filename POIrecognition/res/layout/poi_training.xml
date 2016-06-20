@@ -14,7 +14,7 @@
 
     <EditText
         android:id="@+id/PoiName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/Poitv"
@@ -31,7 +31,7 @@
 
     <EditText
         android:id="@+id/WiFiScanNumber"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/numScanstv"
@@ -48,7 +48,7 @@
 
     <EditText
         android:id="@+id/TimeInterval"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/intervalScanstv"
@@ -56,22 +56,43 @@
         android:inputType="number" />
 
     <Button
+        android:id="@+id/Training"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/TimeInterval"
+        android:text="@string/BttTraining" />
+
+    <Button
         android:id="@+id/getData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/TimeInterval"
-        android:layout_alignParentStart="true"
-        android:layout_alignStart="@+id/Training"
-        android:layout_below="@+id/Training"
-        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/TimeInterval"
         android:clickable="true"
         android:text="@string/BttGetData" />
-
+    
+    <ProgressBar
+         android:id ="@+id/trainProgress"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         style="@android:style/Widget.ProgressBar.Horizontal"
+         android:layout_below="@+id/getData" 
+         android:max="100"
+         android:progress="0"
+         />
+     <TextView
+         android:id = "@+id/textProgress"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/trainProgress"
+         android:text="@string/loading" />
+    
     <ScrollView
+        android:layout_below="@+id/textProgress"
         android:id="@+id/scrollScan"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/getData" >
+        android:layout_height="match_parent" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,16 +103,12 @@
                 android:id="@+id/textScan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+
+            
+
         </LinearLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/Training"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/TimeInterval"
-        android:text="@string/BttTraining" />
+    
 
 </RelativeLayout>

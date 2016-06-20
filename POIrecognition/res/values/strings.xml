@@ -10,12 +10,14 @@
 	<string name="PoiNameHint">POI</string>
 	<string name="numscanstv">Number of scans:</string>
 	<string name="WiFiScanNumberHint">Number scans</string>
-	<string name="intervalscanstv">Interval temporal scans:</string>
-	<string name="TimeIntervalHint">Interval temporal scans</string>
+	<string name="intervalscanstv">Scan duration:</string>
+	<string name="TimeIntervalHint">Scan duration</string>
 	<string name="BttTraining">Training</string>
-	<string name="PoiStayLength">"textview"</string>
+	<string name="PoiStayLength"></string>
 	<string name="recognitionLabel">Recognition POI</string>
 	<string name="BttRec">Recognition of place</string>
 	<string name="trainLabel">Training POI</string>
-	<string name="BttGetData">Data collected back to main</string>
+	<string name="BttGetData">back to main</string>
+	<string name="loading">loading</string>
+	<string name="tvRecognition"></string>
 </resources>

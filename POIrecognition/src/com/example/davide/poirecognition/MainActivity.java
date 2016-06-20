@@ -25,9 +25,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.i(tag, "btt listener");
-				String s = "start";
-				Intent startIntent=new Intent("com.example.davide.poirecognitionStart");
-				startIntent.putExtra("stringStart", s);				
+				Intent startIntent=new Intent("com.example.davide.poirecognitionStart");			
 				startActivityForResult(startIntent, START_REQUEST_CODE);				
 			}
 		});
@@ -37,9 +35,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Log.i(tag, "Btt Train Listener");
-				String s2 = "train";
-				Intent trainIntent=new Intent("com.example.davide.poirecognitionTrain");
-				trainIntent.putExtra("stringTrain", s2);				
+				Intent trainIntent=new Intent("com.example.davide.poirecognitionTrain");			
 				startActivityForResult(trainIntent, TRAIN_REQUEST_CODE);			
 			}
 		});
@@ -47,21 +43,14 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if(requestCode==START_REQUEST_CODE)
-		{
-			if(resultCode==Activity.RESULT_OK)
-			{				
-				Log.i(tag, "recognition stop");
-				//data.getStringExtra("recognition");				
+		if(requestCode==START_REQUEST_CODE){
+			if(resultCode==Activity.RESULT_OK){				
+				Log.i(tag, "recognition stop");				
 			}
 		}
-		else if(requestCode==TRAIN_REQUEST_CODE)
-		{
-			if(resultCode== Activity.RESULT_OK)
-			{
+		else if(requestCode==TRAIN_REQUEST_CODE){
+			if(resultCode== Activity.RESULT_OK){
 				Log.i(tag, "train stop");
-				//data.getStringExtra("training");
-
 			}			
 		}
 	}

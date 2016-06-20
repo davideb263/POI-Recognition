@@ -41,7 +41,7 @@ public class History {//lista di scan
 		Scan list1=history.get(i);
 		Scan list2= history.get(j);
 		WeightList wl=new WeightList();
-		apWeight swap;
+		ApWeight swap;
 		
 		for(int a=0; a<list1.size(); a++)
 		{
@@ -104,7 +104,7 @@ public class History {//lista di scan
 					wl1.add(wl.getApWeight(c).getApMac(), (double)0);
 				}				
 			}
-		apWeight swap;
+		ApWeight swap;
 		for(int k = 0; k < wl1.size(); k++)
 		{
 			double weight=0;
@@ -150,3 +150,4 @@ public class History {//lista di scan
 		return wl1;
 	}
 }
+

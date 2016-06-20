@@ -1,6 +1,6 @@
 package com.example.davide.poirecognition;
 
-public class apWeight {// lista di mac e pesi
+public class ApWeight {// lista di mac e pesi
 	private String apMac;
 	private double weight;
 	public String getApMac() {
@@ -15,7 +15,7 @@ public class apWeight {// lista di mac e pesi
 	public void setWeight(double weight) {
 		this.weight = weight;
 	}
-	public apWeight(String apMac, double weight) {
+	public ApWeight(String apMac, double weight) {
 		this.apMac = apMac;
 		this.weight = weight;
 	}

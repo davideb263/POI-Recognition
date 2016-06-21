@@ -138,13 +138,11 @@ public class POI_Recognition extends Activity {
 						if(count == SCAN_TO_REC){
 							sl = (Integer)stayLength.get(recPlaces.get(0).getString())+SCANLENGHT*SCAN_TO_REC;
 							place=recPlaces.get(0).getString();
-							}else if((count > SCAN_TO_REC))
+							}else if(count > SCAN_TO_REC)
 							{
 								Log.i(TAG, place+"\n"+recPlaces.get(0).getString());
 								sl = incrementStayLength();
 							}
-							
-							stayLength.put(recPlaces.get(0).getString(), sl );
 //						Log.i(TAG, "30 percento raggiunto");
 //						if(count == SCAN_TO_REC)
 //						{
@@ -372,10 +370,15 @@ public class POI_Recognition extends Activity {
 	public Integer incrementStayLength()	{
 		Integer sl=0;
 		Log.i(TAG, recPlaces.get(0).getString()+""+place+"increment stay length");
-		Log.i(TAG, recPlaces.get(0).toString().equals(place) + " " );
-		//if(recPlaces.get(0).toString().equals(place)){
+		Log.i(TAG, place.compareTo(recPlaces.get(0).getString()) + " " );
+		if(place.compareTo(recPlaces.get(0).getString())==0&&countNoPlace==0){
 		sl = (Integer)stayLength.get(recPlaces.get(0).getString())+SCANLENGHT; 
-		//}
+		}
+		else{
+			stayLength.clear();
+			stayLenghtInit();
+			sl=countNoPlace*SCANLENGHT + SCANLENGHT;
+		}
 		return sl;
 	}
 

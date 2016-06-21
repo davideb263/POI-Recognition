@@ -75,14 +75,14 @@ public class POI_Training extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				//if (history.getHistory().size() != 0) {
 					history.getHistory().clear();
-				//}
-				//if (wlWeight.getWeightsList().size() != 0) {
 					wlWeight.getWeightsList().clear();
-				//}
-					if(timer!=null)
+					if(timer!=null){
 					timer.cancel();
+					}
+					if(wifiReceiver!=null){
+					unregisterReceiver(wifiReceiver);
+					}
 				try {
 					Log.i(TAG, "saving data from user via EditTexts");
 
@@ -105,7 +105,7 @@ public class POI_Training extends Activity {
 				if (poiName == null || scansNumber <= 0 || interval <= 0) {
 					Toast.makeText(getApplicationContext(), "Enter data first", Toast.LENGTH_SHORT).show();
 				}
-				else if (scansNumber <= 15) {
+				else if (scansNumber < 15) {
 						Toast.makeText(getApplicationContext(), "Fp may not be reliable\n not enough scans",
 								Toast.LENGTH_SHORT).show();
 					}
@@ -139,8 +139,9 @@ public class POI_Training extends Activity {
 				history.getHistory().clear();
 				wlWeight.getWeightsList().clear();
 				count = 0;
-				if(timer!=null)
+				if(timer!=null){
 				timer.cancel();
+				}
 				finish();
 
 			}
@@ -177,7 +178,8 @@ public class POI_Training extends Activity {
 			unregisterReceiver(wifiReceiver);
 		}
 		Log.i(TAG, "Closing Training activity");
-		if(timer!=null)
+		if(timer!=null){
 		timer.cancel();
+		}
 	}
 }

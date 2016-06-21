@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
-
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,9 +17,9 @@ import android.widget.Toast;
 public class WiFiScanner extends BroadcastReceiver
 {
 	final private String TAG ="WifiReceiver";
+	
 	private List<ScanResult> wifiList = null;
-	private static String _s = "";
-	private AccessPoint swapAp;
+
 	private int count;
 	private int numberOfScans;
 	private int percentage;
@@ -39,13 +37,14 @@ public class WiFiScanner extends BroadcastReceiver
 		//progress.setMax(100);
 		//progress.setProgress(percentage);
 		
-		POI_Training.progTv.setText("Scansioni in corso...");
+		
 	}	//This method call when timer task triggers
 	public void onReceive(Context c, Intent intent) {
 		Log.i(TAG, "scansione");
+		POI_Training.progTv.setText("Scan in progress...");
 		count++;
 		percentage=count*100/numberOfScans;
-		swapAp=new AccessPoint();
+		AccessPoint swapAp=new AccessPoint();
 		wifiList = POI_Training.wf.getScanResults(); 
 		POI_Training.history.add(new Scan());//
 		for (int i = 0; i < wifiList.size(); i++) {
@@ -100,7 +99,7 @@ public class WiFiScanner extends BroadcastReceiver
 		if(count== numberOfScans)
 		{
 			POI_Training.progTv.setText("Writing file...");
-			Toast.makeText(context, "stop", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "start writing file", Toast.LENGTH_SHORT).show();
 			POI_Training.weightFilter();
 			Log.i(TAG, "number");
 			String storedir = Environment.getExternalStorageDirectory() + "/POI_Fingerprints";
@@ -113,7 +112,7 @@ public class WiFiScanner extends BroadcastReceiver
 			if (storedir != null) {
 				String str = "";
 				for (int i = 0; i < POI_Training.wlWeight.size(); i++) {
-					str += POI_Training.wlWeight.getWeightsList().get(i).getApMac() + "\n";
+					str += POI_Training.wlWeight.getWeightsList().get(i).getString() + "\n";
 				}
 				FileOutputStream fostream = null;
 				OutputStreamWriter outputwriter = null;

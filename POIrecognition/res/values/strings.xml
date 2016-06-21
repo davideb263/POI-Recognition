@@ -4,7 +4,7 @@
     <string name="app_name">POIrecognition</string>
     <string name="InfoText">WiFi POI Recognition with Stay Detection\nVirginia Baroncelli\nDavide Botter
         \nValentina Sanguineti\n IMEI: 35221506509020/9</string>
-	<string name="start">Start</string>
+	<string name="start">Rec</string>
 	<string name="BttTrain">Train</string>
 	<string name="poitv">POI name:</string>
 	<string name="PoiNameHint">POI</string>
@@ -18,6 +18,6 @@
 	<string name="BttRec">Recognition of place</string>
 	<string name="trainLabel">Training POI</string>
 	<string name="BttGetData">back to main</string>
-	<string name="loading">loading</string>
+	<string name="loading"></string>
 	<string name="tvRecognition"></string>
 </resources>

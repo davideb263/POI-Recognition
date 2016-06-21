@@ -5,40 +5,29 @@
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
     tools:context="com.example.davide.poirecognition.MainActivity" 
-    >
-<Button
-    android:id="@+id/BackToMain"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentEnd="true"
-    android:background="@android:drawable/ic_menu_revert" />
-<Button 
-	android:layout_width="wrap_content" 
-	android:layout_height="wrap_content"
-	android:text="@string/BttRec" 
-	android:id="@+id/Recognition" 
-	android:layout_alignParentStart="true" /> 
+    > 
+
 <ProgressBar
-         android:id ="@+id/recProgress"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         style="@android:style/Widget.Holo.Light.ProgressBar.Large"
-         android:layout_below="@+id/Recognition" 
-         android:indeterminate="true"
-         android:visibility="invisible"
-         />
-<TextView 
-    android:id="@+id/placeTv"
-    android:layout_height="wrap_content"
+    android:id="@+id/recProgress"
+    style="@android:style/Widget.Holo.Light.ProgressBar.Large"
     android:layout_width="match_parent"
-    android:text="@string/tvRecognition"
-    android:layout_below="@+id/recProgress"
-    />
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:indeterminate="true"
+    android:visibility="invisible" />
+
+<TextView
+        android:id="@+id/placeTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/recProgress"
+        android:text="@string/tvRecognition" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/placeTv"
-         >
+        android:layout_above="@+id/Recognition"
+        android:layout_below="@+id/placeTv" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,5 +40,23 @@
         android:text="@string/PoiStayLength" />
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/Recognition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:text="@string/BttRec" />
+
+    <Button
+        android:id="@+id/BackToMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:background="@android:drawable/ic_menu_revert" />
+
+    
 
 </RelativeLayout>

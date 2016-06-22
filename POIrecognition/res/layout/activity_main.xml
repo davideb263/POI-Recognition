@@ -5,27 +5,34 @@
     android:orientation="vertical"
     tools:context="com.example.davide.poirecognition.MainActivity" 
     >
-        <TextView
-        android:id="@+id/info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/InfoText" 
-        android:layout_marginLeft="45dp"/>
-           <Button 
-	    android:id="@+id/Start"
+
+	<TextView
+	    android:id="@+id/info"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:text="@string/start"
-	    android:layout_alignTop="@+id/Train"
-	    android:layout_alignEnd="@+id/info"
-	    />
-	<Button 
+	    android:layout_alignParentTop="true"
+	    android:layout_centerHorizontal="true"
+	    android:text="@string/InfoText" />
+
+	<ImageButton
 	    android:id="@+id/Train"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:text="@string/BttTrain"
-	    android:layout_centerVertical="true"
+	    android:layout_alignBaseline="@+id/Start"
+	    android:layout_alignBottom="@+id/Start"
 	    android:layout_alignStart="@+id/info"
+	    android:src="@drawable/train-button01" 
+	    android:contentDescription="@drawable/train-button01"
 	    />
+
+	<ImageButton
+	    android:id="@+id/Start"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignEnd="@+id/info"
+	    android:layout_centerVertical="true"
+	    android:src="@drawable/rec-button01"
+	    android:contentDescription="@drawable/rec-button01"
+	     ></ImageButton>
 
 </RelativeLayout>

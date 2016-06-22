@@ -41,6 +41,10 @@
             android:name=".POI_Training"
             android:label="@string/trainLabel"
              >           
+             <intent-filter>
+                <action android:name="com.example.davide.training" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="com.example.davide.poirecognitionTrain" />
                 <category android:name="android.intent.category.DEFAULT" />

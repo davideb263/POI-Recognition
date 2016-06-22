@@ -15,9 +15,10 @@
 	<string name="BttTraining">Training</string>
 	<string name="PoiStayLength"></string>
 	<string name="recognitionLabel">Recognition POI</string>
-	<string name="BttRec">Recognition of place</string>
+	<string name="BttRec">Start Recognition</string>
 	<string name="trainLabel">Training POI</string>
 	<string name="BttGetData">back to main</string>
 	<string name="loading"></string>
 	<string name="tvRecognition"></string>
+	<string name="trainBtt">train</string>
 </resources>

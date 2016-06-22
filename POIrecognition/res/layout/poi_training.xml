@@ -80,34 +80,17 @@
          android:layout_below="@+id/getData" 
          android:max="100"
          android:progress="0"
+         android:visibility="invisible"
          />
      <TextView
          android:id = "@+id/textProgress"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_below="@+id/trainProgress"
-         android:text="@string/loading" />
+         android:text="@string/loading"
+         android:visibility="invisible"
+          />
     
-    <ScrollView
-        android:layout_below="@+id/textProgress"
-        android:id="@+id/scrollScan"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/textScan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            
-
-        </LinearLayout>
-    </ScrollView>
 
     
 

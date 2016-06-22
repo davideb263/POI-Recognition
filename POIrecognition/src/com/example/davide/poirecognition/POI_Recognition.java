@@ -37,6 +37,7 @@ public class POI_Recognition extends Activity {
 	private TextView poiSL = null;
 	private Button bttback = null;
 	private Button bttRec = null;
+	private Button bttTrain=null;
 	private TextView fingerPrintTV=null;
 	private ProgressBar progressB=null;
 
@@ -69,6 +70,7 @@ public class POI_Recognition extends Activity {
 		poiSL = (TextView) findViewById(R.id.poiSL);
 		bttback = (Button) findViewById(R.id.BackToMain);
 		bttRec = (Button) findViewById(R.id.Recognition);		
+		bttTrain=(Button)findViewById(R.id.bttTrain);
 		progressB=(ProgressBar)findViewById(R.id.recProgress);
 		fingerPrintTV=(TextView)findViewById(R.id.placeTv);
 		fpDataBase = new ArrayList<String>(); //lista dei percorsi nella cartella
@@ -78,7 +80,6 @@ public class POI_Recognition extends Activity {
 		recPlaces = new ArrayList<StringWeight>();//lista di posti riconosciuti e pesi
 		matchList= new ArrayList<Double>();// lista dei pesi
 		stayLength= new HashMap<String, Integer>();// posti e sl
-
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
 		getIntent();
@@ -134,7 +135,9 @@ public class POI_Recognition extends Activity {
 					for(int a=0; a< matchList.size(); a++){
 						sum+=matchList.get(a);
 					}
-					if(recPlaces.get(0).getWeight()> 30*sum/100){
+					if(recPlaces.get(0).getWeight()> 40*sum/100){
+						countNoPlace=0;
+						bttTrain.setVisibility(View.INVISIBLE);
 						if(count == SCAN_TO_REC){
 							sl = (Integer)stayLength.get(recPlaces.get(0).getString())+SCANLENGHT*SCAN_TO_REC;
 							place=recPlaces.get(0).getString();
@@ -181,6 +184,11 @@ public class POI_Recognition extends Activity {
 						countNoPlace++;
 						Log.i(TAG, "noplace");
 						placeOrNotPlace="no place";
+						if(countNoPlace>5){
+							Toast.makeText(getApplicationContext(),"Press train to do training", Toast.LENGTH_SHORT).show();
+							bttTrain.setVisibility(View.VISIBLE);
+						}
+						
 					}
 
 					poiSL.setText(placeOrNotPlace);					
@@ -193,11 +201,19 @@ public class POI_Recognition extends Activity {
 	
 		};
 		registerReceiver(broadcastReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-
+		bttTrain.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i= new Intent("com.example.davide.training");
+				startActivity(i);				
+			}
+		});
 
 		bttback.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				
 				Log.i(TAG, "Recognition to main Activity");
 				recPlaces.clear();
 				recScan.clear();
@@ -229,6 +245,7 @@ public class POI_Recognition extends Activity {
 				recScan.clear();
 				matchList.clear();
 				stayLength.clear();
+				stayLenghtInit();
 				if(weightMatrix!=null){
 					for(int l=0; l<weightMatrix.length; l++){
 						for(int m=0; m<weightMatrix[0].length; m++){
@@ -375,9 +392,8 @@ public class POI_Recognition extends Activity {
 		sl = (Integer)stayLength.get(recPlaces.get(0).getString())+SCANLENGHT; 
 		}
 		else{
-			stayLength.clear();
-			stayLenghtInit();
-			sl=countNoPlace*SCANLENGHT + SCANLENGHT;
+			stayLength.put(recPlaces.get(0).getString(), 0);
+			sl=SCANLENGHT;
 		}
 		return sl;
 	}
@@ -398,6 +414,7 @@ public class POI_Recognition extends Activity {
 		String _s="";
 		Log.i(TAG, "print place + stay length");
 		Set<Entry<String, Integer>> entries = stayLength.entrySet();
+		
 		for (Entry<String, Integer> entry : entries) {
 			String key = entry.getKey().toString();
 			Integer value = entry.getValue();
@@ -405,8 +422,17 @@ public class POI_Recognition extends Activity {
 				_s += " Place: " + key + " " + "Stay Lenght: " + value;
 				_s += "\n";
 			}
+				
 		}
-
+		for(Entry<String, Integer> entry: entries)
+		{
+			Integer v=entry.getValue();
+			String key=entry.getKey();
+			if(v==0){
+				_s+="Possible place: "+key;
+				_s+="\n";
+			}	
+		}
 		return _s;
 	}
 	public static String convertStreamToString(InputStream is){

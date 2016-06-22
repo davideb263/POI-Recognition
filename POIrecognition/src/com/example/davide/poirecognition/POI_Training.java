@@ -55,7 +55,6 @@ public class POI_Training extends Activity {
 		intervalScans = (EditText) findViewById(R.id.TimeInterval);
 		bttTrain = (Button) findViewById(R.id.Training);
 		bttFinish = (Button) findViewById(R.id.getData);
-		mainText = (TextView) findViewById(R.id.textScan);
 		progTv = (TextView) findViewById(R.id.textProgress);
 		pb = (ProgressBar) findViewById(R.id.trainProgress);
 
@@ -74,7 +73,8 @@ public class POI_Training extends Activity {
 
 			@Override
 			public void onClick(View v) {
-
+				progTv.setVisibility(View.VISIBLE);
+					pb.setVisibility(View.VISIBLE);
 					history.getHistory().clear();
 					wlWeight.getWeightsList().clear();
 					if(timer!=null){

@@ -57,20 +57,20 @@
 
     <Button
         android:id="@+id/Training"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/TimeInterval"
-        android:text="@string/BttTraining" />
+        android:background="@drawable/trainbutton" />
 
     <Button
         android:id="@+id/getData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_alignEnd="@+id/TimeInterval"
         android:layout_below="@+id/TimeInterval"
         android:clickable="true"
-        android:text="@string/BttGetData" />
+        android:background="@drawable/backbutton" />
     
     <ProgressBar
          android:id ="@+id/trainProgress"

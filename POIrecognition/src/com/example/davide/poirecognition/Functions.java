@@ -21,9 +21,9 @@ public class Functions {
 			return -1;
 	}
 
-	public static double weight(int pos1, int pos2)// calcola il peso date le 2
+	public static double weight(int pos1, int pos2){// calcola il peso date le 2
 													// posizioni
-	{
+	
 		double d = 0;
 		if (pos1 != -1 && pos2 != -1) {
 			d = 1.0 / ((double) (Math.abs(pos1 - pos2) + (double) (pos1 + pos2) / 2));

@@ -115,8 +115,8 @@ public class History {// lista di scan
 		for (int m = 0; m < wl1.size(); m++) {
 			if (Functions.GetI(wl.stringList(), wl1.getElement(m).getString()) != -1) {
 				int in = Functions.GetI(wl.stringList(), wl1.getElement(m).getString());
-				wl1.getElement(m).setWeight((wl1.getElement(m).getWeight() + (index) * wl.getElement(in).getWeight())
-						/ (double) (index + 1));
+				wl1.getElement(m).setWeight((wl1.getElement(m).getWeight() + (index -1) * wl.getElement(in).getWeight())
+						/ (double) (index));
 			} else {
 				wl1.getElement(m).setWeight(0);
 			}

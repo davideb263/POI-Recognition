@@ -74,15 +74,15 @@ public class POI_Training extends Activity {
 			@Override
 			public void onClick(View v) {
 				progTv.setVisibility(View.VISIBLE);
-					pb.setVisibility(View.VISIBLE);
-					history.getHistory().clear();
-					wlWeight.getWeightsList().clear();
-					if(timer!=null){
+				pb.setVisibility(View.VISIBLE);
+				history.getHistory().clear();
+				wlWeight.getWeightsList().clear();
+				if (timer != null) {
 					timer.cancel();
-					}
-					if(wifiReceiver!=null){
+				}
+				if (wifiReceiver != null) {
 					unregisterReceiver(wifiReceiver);
-					}
+				}
 				try {
 					Log.i(TAG, "saving data from user via EditTexts");
 
@@ -96,7 +96,7 @@ public class POI_Training extends Activity {
 							Context.INPUT_METHOD_SERVICE);
 					inputManager.hideSoftInputFromWindow(
 							(null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(),
-									InputMethodManager.HIDE_NOT_ALWAYS);
+							InputMethodManager.HIDE_NOT_ALWAYS);
 					Toast.makeText(getApplicationContext(), "Input Got Successfully", Toast.LENGTH_SHORT).show();
 				} catch (NumberFormatException e) {
 					Toast.makeText(getApplicationContext(), "Not correct input", Toast.LENGTH_LONG).show();
@@ -104,16 +104,13 @@ public class POI_Training extends Activity {
 				}
 				if (poiName == null || scansNumber <= 0 || interval <= 0) {
 					Toast.makeText(getApplicationContext(), "Enter data first", Toast.LENGTH_SHORT).show();
-				}
-				else if (scansNumber < 15) {
-						Toast.makeText(getApplicationContext(), "Fp may not be reliable\n not enough scans",
-								Toast.LENGTH_SHORT).show();
-					}
-				else if (interval < 3) {
-						Toast.makeText(getApplicationContext(), "Fp may not be reliable\n too short duration",
-								Toast.LENGTH_SHORT).show();
-					}
-					else {					
+				} else if (scansNumber < 15) {
+					Toast.makeText(getApplicationContext(), "Fp may not be reliable\n not enough scans",
+							Toast.LENGTH_SHORT).show();
+				} else if (interval < 3) {
+					Toast.makeText(getApplicationContext(), "Fp may not be reliable\n too short duration",
+							Toast.LENGTH_SHORT).show();
+				} else {
 					timer = new Timer();
 					timerTask = new TimerTask() {
 						@Override
@@ -122,8 +119,8 @@ public class POI_Training extends Activity {
 							Log.i(TAG, "run");
 							startScan();
 							if (count == 0) {
-							Log.i(TAG, "termine scansione");
-							timer.cancel();
+								Log.i(TAG, "termine scansione");
+								timer.cancel();
 							}
 						}
 					};
@@ -139,8 +136,8 @@ public class POI_Training extends Activity {
 				history.getHistory().clear();
 				wlWeight.getWeightsList().clear();
 				count = 0;
-				if(timer!=null){
-				timer.cancel();
+				if (timer != null) {
+					timer.cancel();
 				}
 				finish();
 
@@ -178,8 +175,8 @@ public class POI_Training extends Activity {
 			unregisterReceiver(wifiReceiver);
 		}
 		Log.i(TAG, "Closing Training activity");
-		if(timer!=null){
-		timer.cancel();
+		if (timer != null) {
+			timer.cancel();
 		}
 	}
 }

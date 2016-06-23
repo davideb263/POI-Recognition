@@ -4,7 +4,7 @@ public class AccessPoint {
 
 	private String mac;
 	private String ssid;
-	private double rss;
+	private int rss;
 
 	public String getMac() {
 		return mac;
@@ -26,7 +26,7 @@ public class AccessPoint {
 		return rss;
 	}
 
-	public void setRss(double rss) {
+	public void setRss(int rss) {
 		this.rss = rss;
 	}
 
@@ -36,7 +36,7 @@ public class AccessPoint {
 		rss = 0;
 	}
 
-	public AccessPoint(String _mac, String _ssid, double _rss) {
+	public AccessPoint(String _mac, String _ssid, int _rss) {
 		mac = _mac;
 		ssid = _ssid;
 		rss = _rss;

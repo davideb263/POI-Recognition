@@ -7,12 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 
 public class MainActivity extends Activity {
 	final String tag = "Main activity";
-	ImageButton bttstart = null;
-	ImageButton btttrain = null;
+	Button bttstart = null;
+	Button btttrain = null;
 	final int START_REQUEST_CODE = 1;
 	final int TRAIN_REQUEST_CODE = 2;
 
@@ -20,8 +19,8 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		bttstart = (ImageButton) findViewById(R.id.Start);
-		btttrain = (ImageButton) findViewById(R.id.Train);
+		bttstart = (Button) findViewById(R.id.Start);
+		btttrain = (Button) findViewById(R.id.Train);
 		bttstart.setOnClickListener(new OnClickListener() {
 
 			@Override

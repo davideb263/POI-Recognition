@@ -14,25 +14,22 @@
 	    android:layout_centerHorizontal="true"
 	    android:text="@string/InfoText" />
 
-	<ImageButton
-	    android:id="@+id/Train"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignBaseline="@+id/Start"
-	    android:layout_alignBottom="@+id/Start"
-	    android:layout_alignStart="@+id/info"
-	    android:src="@drawable/train-button01" 
-	    android:contentDescription="@drawable/train-button01"
-	    />
-
-	<ImageButton
+	<Button
 	    android:id="@+id/Start"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
+	    android:layout_width="70dp"
+	    android:layout_height="70dp"
 	    android:layout_alignEnd="@+id/info"
 	    android:layout_centerVertical="true"
-	    android:src="@drawable/rec-button01"
-	    android:contentDescription="@drawable/rec-button01"
-	     ></ImageButton>
+	    android:background="@drawable/recbutton"
+	    />
+
+	<Button
+	    android:id="@+id/Train"
+	    android:layout_width="70dp"
+	    android:layout_height="70dp"
+	    android:layout_centerVertical="true"
+	    android:background="@drawable/trainbutton"
+	    android:layout_alignStart="@+id/info"
+	    />
 
 </RelativeLayout>

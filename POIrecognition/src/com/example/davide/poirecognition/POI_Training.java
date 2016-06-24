@@ -27,7 +27,6 @@ public class POI_Training extends Activity {
 	private Button bttFinish = null;
 	public static TextView progTv = null;
 	public static ProgressBar pb = null;
-	public static TextView mainText = null;
 
 	public static WifiManager wf = null;
 	private WiFiScanner wifiReceiver = null;
@@ -35,12 +34,12 @@ public class POI_Training extends Activity {
 	private TimerTask timerTask;
 	private Timer timer;
 	private Context context;
-	public static History history;
+	public static History history;//liste di scnasioni
 	private int count = 0;
-	private int scansNumber;
-	private int interval;
-	public static String name;
-	static public WeightList wlWeight;
+	private int scansNumber;//numero di scansioni
+	private int interval;//durata
+	public static String name;//nome del posto
+	static public WeightList wlWeight;//fingerprint corrente
 	private final static String TAG = "Training";
 
 	@Override
@@ -65,10 +64,7 @@ public class POI_Training extends Activity {
 		wlWeight = new WeightList();
 		wf = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		context = getApplicationContext();
-		// wifi scanned value broadcast receiver
-		// Register broadcast receiver
-		// Broacast receiver will automatically call when number of wifi
-		// connections changed
+
 		bttTrain.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -90,27 +86,33 @@ public class POI_Training extends Activity {
 					scansNumber = Integer.parseInt(numberScans.getText().toString());
 					interval = Integer.parseInt(intervalScans.getText().toString());
 					count = scansNumber;
+					// wifi scanned value broadcast receiver
+					
 					wifiReceiver = new WiFiScanner(scansNumber, context);
 					registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+					// Register broadcast receiver
 					InputMethodManager inputManager = (InputMethodManager) getSystemService(
-							Context.INPUT_METHOD_SERVICE);
+							Context.INPUT_METHOD_SERVICE);//API per input 
 					inputManager.hideSoftInputFromWindow(
 							(null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(),
-							InputMethodManager.HIDE_NOT_ALWAYS);
+							InputMethodManager.HIDE_NOT_ALWAYS);//nasconde la tastiera
 					Toast.makeText(getApplicationContext(), "Input Got Successfully", Toast.LENGTH_SHORT).show();
-				} catch (NumberFormatException e) {
-					Toast.makeText(getApplicationContext(), "Not correct input", Toast.LENGTH_LONG).show();
-
 				}
-				if (poiName == null || scansNumber <= 0 || interval <= 0) {
+				catch (NumberFormatException e) {
+					Toast.makeText(getApplicationContext(), "Not correct input", Toast.LENGTH_LONG).show();
+				}
+				if (poiName == null || scansNumber <= 0 || interval <= 0) {//dati non giusti
 					Toast.makeText(getApplicationContext(), "Enter data first", Toast.LENGTH_SHORT).show();
-				} else if (scansNumber < 15) {
+				}
+				else if (scansNumber < 15) {//numero di scansioni non sufficiente
 					Toast.makeText(getApplicationContext(), "Fp may not be reliable\n not enough scans",
 							Toast.LENGTH_SHORT).show();
-				} else if (interval < 3) {
+				}
+				else if (interval < 3) {//intervallo troppo breve
 					Toast.makeText(getApplicationContext(), "Fp may not be reliable\n too short duration",
 							Toast.LENGTH_SHORT).show();
-				} else {
+				}
+				else {
 					timer = new Timer();
 					timerTask = new TimerTask() {
 						@Override
@@ -129,9 +131,8 @@ public class POI_Training extends Activity {
 			}
 		});
 		bttFinish.setOnClickListener(new OnClickListener() {
-
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v) {//ritorni alla mainActivity
 				setResult(Activity.RESULT_OK, new Intent());
 				history.getHistory().clear();
 				wlWeight.getWeightsList().clear();
@@ -140,17 +141,15 @@ public class POI_Training extends Activity {
 					timer.cancel();
 				}
 				finish();
-
 			}
 		});
 	}
 
-	public static void weightFilter() {
+	public static void weightFilter() {//errorCorrectionFilter per pesi sotto soglia
 		double threshold = 0.01;
 		String macAddress = "";
 		Log.i(TAG, "Enter weight filter");
 		for (int a = 0; a < wlWeight.size(); a++) {
-
 			if (wlWeight.getElement(a).getWeight() < threshold) {
 				macAddress = wlWeight.getElement(a).getString();
 				Log.i(TAG, macAddress);

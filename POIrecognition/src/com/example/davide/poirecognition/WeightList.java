@@ -2,7 +2,7 @@ package com.example.davide.poirecognition;
 
 import java.util.ArrayList;
 
-public class WeightList {
+public class WeightList {//lista di stringa e peso
 	private ArrayList<StringWeight> weightsList;
 
 	public WeightList() {
@@ -33,11 +33,10 @@ public class WeightList {
 		return weightsList.get(i);
 	}
 
-	public ArrayList<String> stringList() {
+	public ArrayList<String> stringList() {//dalla lista crea una lista di stringhe per trovare la posizione nell'insieme
 		ArrayList<String> listString = new ArrayList<String>();
 		for (int a = 0; a < weightsList.size(); a++) {
 			listString.add(weightsList.get(a).getString());
-
 		}
 		return listString;
 	}

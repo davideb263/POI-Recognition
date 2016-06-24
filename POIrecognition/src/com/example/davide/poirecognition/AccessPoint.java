@@ -1,10 +1,10 @@
 package com.example.davide.poirecognition;
 
-public class AccessPoint {
+public class AccessPoint {// classe cha contiene mac, ssid e received signal strenght 
 
 	private String mac;
 	private String ssid;
-	private int rss;
+	private int rss;// scan result restituisce un int
 
 	public String getMac() {
 		return mac;
@@ -22,7 +22,7 @@ public class AccessPoint {
 		this.ssid = ssid;
 	}
 
-	public double getRss() {
+	public int getRss() {
 		return rss;
 	}
 
@@ -43,7 +43,7 @@ public class AccessPoint {
 	}
 
 	@Override
-	public String toString() {
+	public String toString() {//stampa in grassetto
 		String result = "<b>SSID:</b> " + ssid + "<br>" + "<b>MAC:</b> " + mac + "<br>" + "<b>RSS[dBm]:</b> " + rss
 				+ "<br>" + "<br>";
 		return result;

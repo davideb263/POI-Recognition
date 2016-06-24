@@ -2,7 +2,7 @@ package com.example.davide.poirecognition;
 
 import java.util.ArrayList;
 
-public class Scan {
+public class Scan {//scansione di Access point
 
 	private ArrayList<AccessPoint> scan;
 
@@ -26,8 +26,7 @@ public class Scan {
 		return scan.size();
 	}
 
-	public ArrayList<String> stringList() {// dato lo scan ritorna una lista di
-											// mac
+	public ArrayList<String> stringList() {// dato lo scan ritorna una lista di mac dei suoi Access point
 		ArrayList<String> stringList = new ArrayList<String>();
 		for (int a = 0; a < this.size(); a++) {
 			stringList.add(this.getAp(a).getMac());

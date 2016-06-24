@@ -25,9 +25,9 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Log.i(tag, "btt listener");
+				Log.i(tag, "button start listener");
 				Intent startIntent = new Intent("com.example.davide.poirecognitionStart");
-				startActivityForResult(startIntent, START_REQUEST_CODE);
+				startActivityForResult(startIntent, START_REQUEST_CODE);//fa partire la recognition
 			}
 		});
 
@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				Log.i(tag, "Btt Train Listener");
 				Intent trainIntent = new Intent("com.example.davide.poirecognitionTrain");
-				startActivityForResult(trainIntent, TRAIN_REQUEST_CODE);
+				startActivityForResult(trainIntent, TRAIN_REQUEST_CODE);//fa partire il training
 			}
 		});
 	}
@@ -47,11 +47,12 @@ public class MainActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == START_REQUEST_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
-				Log.i(tag, "recognition stop");
+				Log.i(tag, "recognition stop");//torna dalla recognition
 			}
-		} else if (requestCode == TRAIN_REQUEST_CODE) {
+		}
+		else if (requestCode == TRAIN_REQUEST_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
-				Log.i(tag, "train stop");
+				Log.i(tag, "train stop");//torna indietro dal training
 			}
 		}
 	}

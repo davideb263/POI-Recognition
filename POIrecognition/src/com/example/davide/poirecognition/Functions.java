@@ -4,21 +4,20 @@ import java.util.List;
 
 public class Functions {
 
-	public static int GetI(List<String> l, String mac) { // trova la posizione
-															// della stringa
+	public static int GetI(List<String> l, String element) { // trova la posizione
+															// della stringa in una lista
 		boolean isPresent = false;
 		int pos = 0;
 		for (int a = 0; a < l.size(); a++) {
-			if (l.get(a).compareTo(mac) == 0) {
+			if (l.get(a).compareTo(element) == 0) {
 				pos = a;
 				isPresent = true;
 			}
-
 		}
-		if (isPresent)
+		if (isPresent)// se lo trova resituisce la pos
 			return pos;
 		else
-			return -1;
+			return -1;//altrimenti resituisce -1
 	}
 
 	public static double weight(int pos1, int pos2){// calcola il peso date le 2

@@ -21,7 +21,7 @@ public class StringWeight {// lista di stringhe e pesi
 	}
 	@Override
 	public String toString() {
-		String stringa=string+" " +Double.toString(weight);
-		return stringa;
+		String stringWeight=string+" " +Double.toString(weight);
+		return stringWeight;
 	}
 }

@@ -24,44 +24,33 @@ public class WiFiScanner extends BroadcastReceiver {
 	private int numberOfScans;
 	private int percentage;
 	private Context context;
-	// private ProgressDialog progress;
 
 	public WiFiScanner(int max, Context c) {
 		count = 0;
-		numberOfScans = max;// total scans
+		numberOfScans = max;// totale scansioni
 		context = c;
 		percentage = 0;
-		// progress=new ProgressDialog(c);
-		// progress.show(c, "Training", "Scansioni in corso..", false);
-		// progress.setMax(100);
-		// progress.setProgress(percentage);
-
-	} // This method call when timer task triggers
-
+	} 
+	//La funzione è eseguita quando il WiFiManager restituisce la scansione
+	//ed è svolta in modo asincrono
 	public void onReceive(Context c, Intent intent) {
 		Log.i(TAG, "scansione");
 		POI_Training.progTv.setText("Scan in progress...");
 		count++;
-		percentage = count * 100 / numberOfScans;
+		percentage = count * 100 / numberOfScans;//percentuale svolta
 		AccessPoint swapAp = new AccessPoint();
-		wifiList = POI_Training.wf.getScanResults();
-		POI_Training.history.add(new Scan());//
-		for (int i = 0; i < wifiList.size(); i++) {
-			ScanResult sc = wifiList.get(i);
-			Log.i(TAG, "Rete numero " + (i + 1));
-			Log.i(TAG, "SSID" + sc.SSID);
-			Log.i(TAG, "MAC" + sc.BSSID);
-			Log.i(TAG, "Ss [dBm]" + sc.level);
-		}
-		//
+		wifiList = POI_Training.wf.getScanResults();//WiFiManager restituisce la scansione
+		POI_Training.history.add(new Scan());//aggiungiamo una scansione
 
+		//aggiunge all'ultima scansione accesspoint con mac, nome della rete e potenza
 		for (int i = 0; i < wifiList.size(); i++) {
 
 			POI_Training.history.getScan(POI_Training.history.size() - 1).add(new AccessPoint(
 					wifiList.get(i).BSSID.toString(), wifiList.get(i).SSID.toString(), wifiList.get(i).level));
 
 		}
-		for (int i = 0; i < POI_Training.history.getScan(POI_Training.history.size() - 1).size(); i++) { // sort
+		//sort scansione ricevuta
+		for (int i = 0; i < POI_Training.history.getScan(POI_Training.history.size() - 1).size(); i++) {
 			for (int j = i; j < POI_Training.history.getScan(POI_Training.history.size() - 1).size(); j++) {
 				if (POI_Training.history.getScan(POI_Training.history.size() - 1).getAp(i)
 						.getRss() < POI_Training.history.getScan(POI_Training.history.size() - 1).getAp(j).getRss()) {
@@ -73,29 +62,25 @@ public class WiFiScanner extends BroadcastReceiver {
 			}
 
 		}
+		for (int i = 0; i < POI_Training.history.getScan(POI_Training.history.size() -1).size(); i++) {
+			AccessPoint a= POI_Training.history.getScan(POI_Training.history.size() -1).getAp(i);
+			Log.i(TAG, "Rete numero " + (i + 1));
+			Log.i(TAG, "SSID" + a.getSsid());
+			Log.i(TAG, "MAC" + a.getMac());
+			Log.i(TAG, "Ss [dBm]" + a.getRss());
+		}
 		if (count == 2) {
 			POI_Training.progTv.setText("merging...");
-			POI_Training.wlWeight = POI_Training.history.firstMerge(0, 1);// la
-			// fp
-			// corrente
-			// è
-			// tra
-			// 2
-			// scansioni
+			POI_Training.wlWeight = POI_Training.history.firstMerge(0, 1);// la fp corrente è il merge e sort tra
+																			//le prime 2 scansioni
 			POI_Training.pb.setProgress(percentage);
 		}
-		if (count > 2) {
+		else if (count > 2) {
 			POI_Training.progTv.setText("merging...");
 			POI_Training.wlWeight = POI_Training.history.Merge(count - 1, POI_Training.wlWeight);// la
 			// fp
 			// corrente
-			// è
-			// tra
-			// la
-			// fp
-			// e
-			// la
-			// scansione
+			// è il merge e sort tra la fp corrente e la scansione/
 			POI_Training.pb.setProgress(percentage);
 		}
 		// if(count>=2)
@@ -115,19 +100,19 @@ public class WiFiScanner extends BroadcastReceiver {
 		// }
 		if (count == numberOfScans) {
 			POI_Training.progTv.setText("Writing file...");
-			POI_Training.weightFilter();
-			Log.i(TAG, "number");
+			POI_Training.weightFilter();//rimuove dall'ultima fp i mac con i pesi minori della soglia
+			Log.i(TAG, "numberOfScans");
 			String storedir = Environment.getExternalStorageDirectory() + "/POI_Fingerprints";
 			File f = new File(storedir);
-			if (!f.exists()) {
+			if (!f.exists()) {//prova a creare una directory
 				if (!f.mkdir()) {
-					Log.e("Error", "Can't create download directory");
+					Log.e("Error", "Can't create directory");
 				}
 			}
 			if (storedir != null) {
-				String str = "";
-				for (int i = 0; i < POI_Training.wlWeight.size(); i++) {
-					str += POI_Training.wlWeight.getWeightsList().get(i).getString() + "\n";
+				String str = "";//se ha creato la cartella
+				for (int i = 0; i < POI_Training.wlWeight.size(); i++) {//scrive sul file una stringa con gli ap separati dagli a capo
+					str += POI_Training.wlWeight.getWeightsList().get(i).getString() + "\n";//ordinati per peso
 				}
 				FileOutputStream fostream = null;
 				OutputStreamWriter outputwriter = null;
@@ -136,51 +121,22 @@ public class WiFiScanner extends BroadcastReceiver {
 				try {
 					fostream = new FileOutputStream(filename);
 					outputwriter = new OutputStreamWriter(fostream);
-					outputwriter.append(str);
+					outputwriter.append(str);//scrive un file che ha nome il nome del poi e contiene i mac
 					outputwriter.close();
 					fostream.close();
 					POI_Training.pb.setVisibility(View.GONE);
-				} catch (FileNotFoundException e) {
-					Log.e(TAG, e.getMessage());
-				} catch (IOException e) {
-					Log.e(TAG, e.getMessage());
-				} finally {
 					POI_Training.progTv.setText("Finish fingerprinting!\nFingerprint created successfully");
 					Toast.makeText(context, "Saved file now", Toast.LENGTH_SHORT).show();
 				}
+				catch (FileNotFoundException e) {
+					Log.e(TAG, e.getMessage());
+				}
+				catch (IOException e) {
+					Log.e(TAG, e.getMessage());
+				}
 			}
 		}
-
 	}
 
-	/*
-	 * private List <ScanResult> myScanResults=null;
-	 * 
-	 * @Override public void onReceive(Context context, Intent arg1) {
-	 * MainActivity.mainText.setText("Scan wifi signals\n"); myScanResults=
-	 * MainActivity.wf.getScanResults(); Log.i(TAG,
-	 * "***************SCANSIONE RETI WiFi********************"); for (int i =
-	 * 0; i < myScanResults.size(); i++) { ScanResult sc= myScanResults.get(i);
-	 * 
-	 * Log.i(TAG, "Rete numero "+ (i+1)); Log.i(TAG, "SSID"+sc.SSID); Log.i(TAG,
-	 * "MAC"+sc.BSSID); Log.i(TAG, "Ss [dBm]"+sc.level);
-	 * MainActivity.mainText.append("Rete numero "+(i+1) +"SSID "+sc.SSID+"\n"+
-	 * "MAC "+sc.BSSID +"Ss [dBm] "+sc.level+"\n"); } }for(int i=history.Size()
-	 * -1; i>=0; i--) {
-	 * 
-	 * _s = _s +"<br>       <b>Number Of Wifi connections :" +
-	 * history.getHistory().get(i).Size() + "</b>" + "<br><br>";
-	 * 
-	 * 
-	 * for(int a = 0; a < history.getHistory().get(i).Size(); a++){
-	 * 
-	 * _s = _s+"<b><font color=\"red\">WiFi " + (a+1) + "</font></b>" +
-	 * "<br>"+history.getHistory().get(i).GetIndex(a).ToString();
-	 * 
-	 * }
-	 * 
-	 * } POI_Training.mainText.append(Html.fromHtml(_s));
-	 * 
-	 */
 
 }
